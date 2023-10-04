@@ -11,7 +11,7 @@ local totalAds = 0
 local currentAd = 1
 local names = {}
 
-local kv = LoadKeyValues("scripts/configs/reklama.ini")
+local kv = LoadKeyValues("scripts/configs/plugins.ini")
 
 function intToIp(int)
 	local a = bit.band(int, 0xFF000000)
@@ -77,7 +77,7 @@ function loadCFG()
 			totalAds = totalAds + 1
 		end
 		
-		print("reklama.ini loaded")
+		print("plugins.ini loaded")
 		
 		if totalAds == 0 then
 			return false
@@ -89,7 +89,7 @@ function loadCFG()
 		
 		return true
 	else 
-		print("Couldn't load config file scripts/configs/reklama.ini")
+		print("Couldn't load config file scripts/configs/plugins.ini")
 		return false
 	end
 end
