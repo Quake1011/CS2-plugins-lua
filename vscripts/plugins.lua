@@ -3,7 +3,7 @@ require('includes/timers')
 print 	('###############')
 print 	('Plugins Loaded')
 print	('Author: Palonez')
-print	('Version: 0.2')
+print	('Version: 0.3')
 print 	('###############')
 
 local vkontakte, telegram, discord
@@ -48,7 +48,7 @@ function ReplaceTags(str)
 	str = string.gsub(str, "{PORT}", tostring(Convars:GetInt("hostport")))
 	str = string.gsub(str, "{IP}", intToIp(Convars:GetInt("hostip")))
 	str = string.gsub(str, "{MAXPL}", tostring(Convars:GetInt("sv_visiblemaxplayers")))
-	str = string.gsub(str, "{PL}", Entities:FindAllByClassname("player"))
+	str = string.gsub(str, "{PL}", tostring(#Entities:FindAllByClassname("player")))
 	str = string.gsub(str, "{MAP}", GetMapName())
 	str = string.gsub(str, "{NEXTMAP}", Convars:GetStr("nextlevel"))
 	str = string.gsub(str, "{TIME}", Time())
@@ -78,6 +78,15 @@ function loadCFG()
 		end
 		
 		print("reklama.ini loaded")
+		
+		if totalAds == 0 then
+			return false
+		end
+		
+		if timeAds == 0.0 then
+			return false
+		end
+		
 		return true
 	else 
 		print("Couldn't load config file scripts/configs/reklama.ini")
@@ -99,36 +108,113 @@ function PlayerDeath(event)
 	if attacker ~= nil and user ~= nil then
 		if attacker ~= user then
 			if event["distance"] ~= nil then 
-				PrintToAll(" {DARKRED}[ KILL ]{WHITE} Игрок {DARKGREEN}" .. attacker .. "{WHITE} убил игрока {DARKGREEN}" .. user .. " {WHITE}с расстояния: {DARKRED}" .. tonumber(string.format("%.2f", event["distance"])) .."м.", "chat")
+				if kv["kill_announce"] == 1 then
+					local message = kv["kill_announce_message"]
+					message = string.gsub(message, "{attacker}", attacker)
+					message = string.gsub(message, "{user}", user)
+					message = string.gsub(message, "{distance}", tonumber(string.format("%.2f", event["distance"])))
+					PrintToAll(message, "chat")
+				end
 			end
 		end
 	end
 end
 
 function PlayerConnect(event)
-	local bot
-	if event["bot"] == true then 
-		bot = ""
-	else
-		bot = "(Бот)" 
+	if kv["connect_announce"] == 1 then
+		local bot
+		if event["bot"] == true then 
+			bot = ""
+		else
+			bot = "(Бот)" 
+		end
+		local message = kv["connect_announce_message"]
+		message = string.gsub(message, "{user}", event["name"])
+		message = string.gsub(message, "{botstatus}", bot)
+		PrintToAll(message, "chat")
 	end
-	
-	PrintToAll(" {DARKRED}[ INFO ]{WHITE} Игрок {DARKGREEN}" .. event["name"] .. " {WHITE}зашел на сервер" .. bot, "chat")
 	
 	names[event["userid"]] = event["name"]
 end
 
+function PlayerTeam(event)
+	if kv["change_team_announce"] == 1 then
+		if event["disconnect"] ~= true then
+			if event["isbot"] ~= true then
+				local player = GetNameByID(event["userid"])
+				if player ~= nil then
+					if event["team"] ~= nil then
+						local team
+						if event["team"] == 0 then
+							team = "unconnected"
+						elseif event["team"] == 1 then
+							team = "spec"
+						elseif event["team"] == 2 then
+							team = "T"
+						elseif event["team"] == 3 then
+							team = "CT"
+						end
+
+						local message = kv["change_team_announce_message"]
+						message = string.gsub(message, "{user}", player)
+						message = string.gsub(message, "{team}", team)
+						PrintToAll(message, "chat")
+					end
+				end
+			end
+		end
+	end
+end
+
+function GetNameByID(id)
+	for k, v in pairs(names) do
+		if k == id then
+			return v
+		else 
+			return nil
+		end
+	end
+end
+
 function PlayerDisconnect(event)
-	local bot
-	if event["bot"] == true then 
-		bot = ""
-	else
-		bot = "(Бот)" 
+	if kv["disconnect_announce"] == 1 then
+		local bot
+		if event["bot"] == true then 
+			bot = ""
+		else
+			bot = "(Бот)" 
+		end
+		local message = kv["disconnect_announce_message"]
+		message = string.gsub(message, "{user}", event["name"])
+		message = string.gsub(message, "{botstatus}", bot)
+		PrintToAll(message, "chat")
 	end
 	
-	PrintToAll(" {DARKRED}[ INFO ]{WHITE} Игрок {DARKGREEN}" .. event["name"] .. " {WHITE}вышел с сервера" .. bot, "chat")
-	
 	names[event["userid"]] = nil
+end
+
+function RoundEnd(event)
+	if kv["round_end_message_status"] == 1 then
+		if kv["round_end_message"].Chat ~= nil then
+			PrintToAll(kv["round_end_message"].Chat, "chat")
+		end
+		
+		if kv["round_end_message"].Center ~= nil then
+			PrintToAll(kv["round_end_message"].Center, "center")
+		end
+	end
+end
+
+function RoundStart(event)
+	if kv["round_start_message_status"] == 1 then
+		if kv["round_start_message"].Chat ~= nil then
+			PrintToAll(kv["round_start_message"].Chat, "chat")
+		end
+		
+		if kv["round_start_message"].Center ~= nil then
+			PrintToAll(kv["round_start_message"].Center, "center")
+		end
+	end
 end
 
 if loadCFG() then
@@ -157,3 +243,6 @@ end
 ListenToGameEvent("player_connect", PlayerConnect, self)
 ListenToGameEvent("player_disconnect", PlayerDisconnect, self)
 ListenToGameEvent("player_death", PlayerDeath, self)
+ListenToGameEvent("round_start", RoundStart, self)
+ListenToGameEvent("round_end", RoundEnd, self)
+ListenToGameEvent("player_team", PlayerTeam, self)
