@@ -1,17 +1,21 @@
 require('includes/timers')
+-- require('includes/json')
 
 print 	('###############')
 print 	('Plugins Loaded')
 print	('Author: Palonez')
-print	('Version: 0.3')
+print	('Version: 0.5')
 print 	('###############')
 
-local vkontakte, telegram, discord
+local vkontakte, telegram, discord, c4t
 local totalAds = 0
 local currentAd = 1
 local names = {}
+local networkids = {}
+local steamids = {}
 
 local kv = LoadKeyValues("scripts/configs/plugins.ini")
+-- local bans = LoadKeyValues("scripts/configs/bans.ini")
 
 function intToIp(int)
 	local a = bit.band(int, 0xFF000000)
@@ -50,7 +54,13 @@ function ReplaceTags(str)
 	str = string.gsub(str, "{MAXPL}", tostring(Convars:GetInt("sv_visiblemaxplayers")))
 	str = string.gsub(str, "{PL}", tostring(#Entities:FindAllByClassname("player")))
 	str = string.gsub(str, "{MAP}", GetMapName())
-	str = string.gsub(str, "{NEXTMAP}", Convars:GetStr("nextlevel"))
+	local nextmap
+	if Convars:GetStr("nextlevel") == "" then
+		nextmap = "unknown"
+	else
+		nextmap = Convars:GetStr("nextlevel")
+	end
+	str = string.gsub(str, "{NEXTMAP}", nextmap)
 	str = string.gsub(str, "{TIME}", Time())
 	str = string.gsub(str, "{DISCORD}", discord)
 	str = string.gsub(str, "{VK}", vkontakte)
@@ -121,20 +131,78 @@ function PlayerDeath(event)
 end
 
 function PlayerConnect(event)
+	if #Entities:FindAllByClassname("player") > 1 then
+		if event["bot"] == false then
+			steamids[event["userid"]] = SteamID3toSteamID2(event["networkid"])
+		end
+	end
+	networkids[event["userid"]] = event["networkid"]
+	names[event["userid"]] = event["name"]
+	
 	if kv["connect_announce"] == 1 then
 		local bot
 		if event["bot"] == true then 
 			bot = ""
 		else
-			bot = "(Бот)" 
+			bot = "(bot)" 
 		end
 		local message = kv["connect_announce_message"]
 		message = string.gsub(message, "{user}", event["name"])
 		message = string.gsub(message, "{botstatus}", bot)
+		message = string.gsub(message, "{steamid}", "")
+		if steamids[event["userid"]] ~= nil then
+			-- if event["bot"] == true then
+				-- message = string.gsub(message, "{steamid}", "")
+			-- else
+				message = string.gsub(message, "{steamid}", steamids[event["userid"]])
+			-- end
+		end
 		PrintToAll(message, "chat")
 	end
-	
-	names[event["userid"]] = event["name"]
+end
+
+-- Convars:RegisterCommand('ban', BanPlayer, '', 0)
+
+-- function BanPlayer(userid, bantime, reason)
+	-- io.open("scripts/configs/bans.ini", 'a+')
+	-- local id = SteamID3toSteamID2(networkids[userid])
+	-- local jsn_table = {
+		-- id = 
+		-- {
+			-- ["name"] = names[userid],
+			-- ["time"] = bantime,
+			-- ["expired"] = tonumber(os.time(os.date("!*t")))+bantime,
+			-- ["reason"] = reason
+		-- }
+	-- }
+	-- print(hi)
+	-- print(json_encode(jsn_table))
+	-- io.write(json_encode(jsn_table))
+	-- io.close()
+-- end
+
+function SteamID3toSteamID2(networkid)
+	networkid = string.sub(networkid, 6)
+	networkid = string.gsub(networkid, "]", "")
+	return "STEAM_0:" .. bit.band(tonumber(networkid), 1) .. ":" .. bit.rshift(tonumber(networkid), 1)
+end
+
+function PlayerDisconnect(event)
+	if kv["disconnect_announce"] == 1 then
+		local bot
+		if event["bot"] == true then 
+			bot = ""
+		else
+			bot = "(bot)" 
+		end
+		local message = kv["disconnect_announce_message"]
+		message = string.gsub(message, "{user}", event["name"])
+		message = string.gsub(message, "{botstatus}", bot)
+		PrintToAll(message, "chat")
+	end
+	steamids[event["userid"]] = nil
+	networkids[event["userid"]] = nil
+	names[event["userid"]] = nil
 end
 
 function PlayerTeam(event)
@@ -176,23 +244,6 @@ function GetNameByID(id)
 	end
 end
 
-function PlayerDisconnect(event)
-	if kv["disconnect_announce"] == 1 then
-		local bot
-		if event["bot"] == true then 
-			bot = ""
-		else
-			bot = "(Бот)" 
-		end
-		local message = kv["disconnect_announce_message"]
-		message = string.gsub(message, "{user}", event["name"])
-		message = string.gsub(message, "{botstatus}", bot)
-		PrintToAll(message, "chat")
-	end
-	
-	names[event["userid"]] = nil
-end
-
 function RoundEnd(event)
 	if kv["round_end_message_status"] == 1 then
 		if kv["round_end_message"].Chat ~= nil then
@@ -202,6 +253,10 @@ function RoundEnd(event)
 		if kv["round_end_message"].Center ~= nil then
 			PrintToAll(kv["round_end_message"].Center, "center")
 		end
+	end
+	
+	if c4t ~= nil then	
+		Timers:RemoveTimer(c4t)
 	end
 end
 
@@ -217,9 +272,35 @@ function RoundStart(event)
 	end
 end
 
+function BombPlanted(event)
+	if kv["bomb_time_announce"] == 1 then
+		local bombBackCounter = Convars:GetInt("mp_c4timer")
+		c4t = Timers:CreateTimer(1, function()
+			if bombBackCounter > 0 then
+				bombBackCounter = bombBackCounter - 1
+			elseif c4t ~= nil then	
+				Timers:RemoveTimer(c4t)
+			end
+			
+			if bombBackCounter == 20 or bombBackCounter == 10 then
+				PrintToAll("Before the explosion is left: " .. bombBackCounter .. " seconds", "center")
+			end
+			
+			if bombBackCounter <= 5 then
+				PrintToAll(bombBackCounter .. "...", "center")
+			end
+			
+			if bombBackCounter ~= 0 then
+				return 1.0
+			end
+			end
+		)
+	end
+end
+
 if loadCFG() then
 	Timers:CreateTimer(function()
-
+	
 		local counter = currentAd
 		if kv["adverts"][tostring(counter)].Chat ~= nil then
 			PrintToAll(kv["adverts"][tostring(counter)].Chat, "chat")
@@ -246,3 +327,4 @@ ListenToGameEvent("player_death", PlayerDeath, self)
 ListenToGameEvent("round_start", RoundStart, self)
 ListenToGameEvent("round_end", RoundEnd, self)
 ListenToGameEvent("player_team", PlayerTeam, self)
+ListenToGameEvent("bomb_planted", BombPlanted, self)
