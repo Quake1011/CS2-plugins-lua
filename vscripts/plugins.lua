@@ -126,7 +126,7 @@ function PlayerConnect(event)
 		if event["bot"] == true then 
 			bot = ""
 		else
-			bot = "(Бот)" 
+			bot = "(bot)" 
 		end
 		local message = kv["connect_announce_message"]
 		message = string.gsub(message, "{user}", event["name"])
@@ -182,7 +182,7 @@ function PlayerDisconnect(event)
 		if event["bot"] == true then 
 			bot = ""
 		else
-			bot = "(Бот)" 
+			bot = "(bot)" 
 		end
 		local message = kv["disconnect_announce_message"]
 		message = string.gsub(message, "{user}", event["name"])
