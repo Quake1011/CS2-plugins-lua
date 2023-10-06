@@ -23,7 +23,11 @@ sv_cheats 0
 ```
 
 ## Requirements
-- patch vscript.dll: [method-1](https://hlmod.net/threads/source-2-skripting.64842/post-631602) or [method-2](https://github.com/Source2ZE/LuaUnlocker) or [method-3](https://github.com/bklol/vscriptPatch/tree/main)
+- patching vscript.dll:
+	- [method-1](https://hlmod.net/threads/source-2-skripting.64842/post-631602)
+	- [method-2](https://github.com/Source2ZE/LuaUnlocker)
+ 	- [method-3](https://github.com/bklol/vscriptPatch/tree/main)
+ 	- [method-4](https://hlmod.net/threads/source-2-skripting.64842/page-6#post-631991)(easilier)
 
 ## Config file 
 ```
