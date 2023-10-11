@@ -1,12 +1,15 @@
 require('includes/timers')
 
-print 	('###############')
+print 	('#############################################')
 print 	('Plugins Loaded')
-print	('Author: Palonez')
-print	('Version: 0.6')
-print 	('###############')
+print	('Author:\t\t\t\tPalonez')
+print	('Version:\t\t\t0.7')
+print	('Discord:\t\t\tquake1011')
+print	('Github:\t\t\t\tQuake1011')
+print	('If u`ve an idea im ready to listen it')
+print 	('#############################################')
 
-local vkontakte, telegram, discord, c4t
+local vkontakte, telegram, discord, c4t, site, instagram, tiktok, youtube, steam, group
 local totalAds = 0
 local currentAd = 1
 local names = {}
@@ -35,7 +38,6 @@ function ReplaceTags(str)
 	str = string.gsub(str, "{GRAY}", "\x0D")
 	str = string.gsub(str, "{DARKPURPLE}", "\x0E")
 	str = string.gsub(str, "{LIGHTRED}", "\x0F")
-	str = string.gsub(str, "{NL}", "\xe2\x80\xa9")
 	str = string.gsub(str, "{PORT}", tostring(Convars:GetInt("hostport")))
 	str = string.gsub(str, "{IP}", intToIp(Convars:GetInt("hostip")))
 	str = string.gsub(str, "{MAXPL}", tostring(Convars:GetInt("sv_visiblemaxplayers")))
@@ -49,15 +51,37 @@ function ReplaceTags(str)
 	end
 	str = string.gsub(str, "{NEXTMAP}", nextmap)
 	str = string.gsub(str, "{TIME}", Time())
-	str = string.gsub(str, "{DISCORD}", discord)
+	str = string.gsub(str, "{DISCORD}", "https://discord.gg/" .. discord)
 	str = string.gsub(str, "{VK}", vkontakte)
 	str = string.gsub(str, "{TG}", telegram)
+	str = string.gsub(str, "{SITE}", site)
+	str = string.gsub(str, "{INST}", instagram)
+	str = string.gsub(str, "{TT}", tiktok)
+	str = string.gsub(str, "{YT}", youtube)
+	str = string.gsub(str, "{STEAM}", steam)
+	str = string.gsub(str, "{GROUP}", group)
 	return str
 end
 
 function PrintToAll(str, outType)
 	if outType == "chat" then
-		ScriptPrintMessageChatAll(ReplaceTags(str))
+		if string.find(str, "{NL}") ~= nil then
+			local laststr
+			local endIndex = string.find(str:reverse(), string.reverse("{NL}"), 1, true)
+
+			if endIndex then
+				endIndex = #str - endIndex + 1
+				laststr = string.sub(str, endIndex+1)
+			end
+
+			for substring in str:gmatch("(.-)" .. "{NL}") do
+				ScriptPrintMessageChatAll(" " .. ReplaceTags(substring))
+			end
+			
+			ScriptPrintMessageChatAll(" " .. ReplaceTags(laststr))
+		else
+			ScriptPrintMessageChatAll(" " .. ReplaceTags(str))
+		end
 	elseif outType == "center" then
 		ScriptPrintMessageCenterAll(ReplaceTags(str))
 	end	
@@ -65,9 +89,42 @@ end
 
 function loadCFG()
 	if kv ~= nil then
-		vkontakte = kv["vk"]
-		telegram = kv["telegram"]
-		discord = kv["discord"]
+		if kv["vk_link"] ~= nil then
+			vkontakte = kv["vk_link"]
+		end
+		
+		if kv["telegram_link"] ~= nil then
+			telegram = kv["telegram_link"]
+		end
+		
+		if kv["site_link"] ~= nil then
+			site = kv["site_link"]
+		end
+		
+		if kv["inst_link"] ~= nil then
+			instagram = kv["inst_link"]
+		end
+		
+		if kv["tik_tok_link"] ~= nil then
+			tiktok = kv["tik_tok_link"]
+		end
+		
+		if kv["youtube_link"] ~= nil then
+			youtube = kv["youtube_link"]
+		end
+		
+		if kv["steam_link"] ~= nil then
+			steam = kv["steam_link"]
+		end
+		
+		if kv["community_link"] ~= nil then
+			group = kv["community_link"] 
+		end
+		
+		if kv["discord_invite_link"] ~= nil then
+			discord = kv["discord_invite_link"]
+		end
+		
 		timeAds = kv["time"]
 		
 		for k, v in pairs(kv["adverts"]) do
@@ -103,7 +160,6 @@ function SteamID3toSteamID2(networkid)
 end
 
 function PlayerTeam(event)
-
 	if kv["change_team_announce"] == 1 then
 		if event["disconnect"] ~= true then
 			if event["isbot"] ~= true then
@@ -133,7 +189,6 @@ function PlayerTeam(event)
 end
 
 function GetNameByID(id)
-
 	for k, v in pairs(names) do
 		if k == id then
 			return v
@@ -144,7 +199,6 @@ function GetNameByID(id)
 end
 
 function PlayerDisconnect(event)
-
 	if kv["bot_disconnect_announce"] == 0 and event.networkid == "BOT" then
 		return
 	end
@@ -159,7 +213,6 @@ function PlayerDisconnect(event)
 end
 
 function PlayerDeath(event)
-
 	local attacker, user
 	
 	for k, v in pairs(names) do
@@ -169,7 +222,6 @@ function PlayerDeath(event)
 			user = v
 		end
 	end
-	
 	if attacker ~= nil and user ~= nil then
 		if attacker ~= user then
 			if event["distance"] ~= nil then 
@@ -186,7 +238,6 @@ function PlayerDeath(event)
 end
 
 function PlayerConnect(event)
-
 	if kv["bot_connect_announce"] == 0 and event.networkid == "BOT" then
 		return
 	end
@@ -199,11 +250,10 @@ function PlayerConnect(event)
 		message = string.gsub(message, "{user}", event["name"])
 		
 		if event.networkid ~= "BOT" then
-			message = string.gsub(message, "{botstatus}", "")
+			message = string.gsub(message, "{botstatus}", "Player")
 			message = string.gsub(message, "{steamid2}", SteamID3toSteamID2(event["networkid"]))
 			message = string.gsub(message, "{steamid3}", event["networkid"])
 			message = string.gsub(message, "{ipclient}", formatAdr(event["address"]))
-			print(formatAdr(event["address"]))
 		else
 			message = string.gsub(message, "{botstatus}", "Bot")
 			message = string.gsub(message, "{steamid2}", "None")
@@ -215,8 +265,45 @@ function PlayerConnect(event)
 	end
 end
 
-function RoundEnd(event)
+-- takes from https://github.com/NickFox007/LuaHudcoreCS2/blob/e14b7158456f300d25a888382d6ee884f93ec118/hudcore.lua#L55
+function HC_ShowPanelInfo(text, duration)
+	local netTable = {}	
+	netTable["funfact_token"] = text
+	
+	FireGameEvent( "cs_win_panel_round", netTable )
+	
+	Timers:CreateTimer({
+		endTime = duration,
+		callback = function()
+			HC_ResetPanelInfo()    
+		end
+	})
+end
 
+function HC_ResetPanelInfo()	
+	FireGameEvent( "round_start", nil )
+end
+
+function HC_ShowInstructorHint(text, duration, icon)
+	local targetname = UniqueString("instructor")
+	local instr_ent = SpawnEntityFromTableSynchronous("env_instructor_hint",{
+		targetname = targetname,
+        hint_caption = text,
+        hint_timeout = duration,
+		hint_icon_onscreen = icon
+    })
+	
+	DoEntFire("!self","ShowHint",targetname,0,nil,instr_ent);
+	
+	Timers:CreateTimer({
+		endTime = duration,
+		callback = function()
+			UTIL_Remove(instr_ent)    
+		end
+	})
+end
+
+function RoundEnd(event)
 	if kv["round_end_message_status"] == 1 then
 		if kv["round_end_message"].Chat ~= nil then
 			PrintToAll(kv["round_end_message"].Chat, "chat")
@@ -233,7 +320,6 @@ function RoundEnd(event)
 end
 
 function RoundStart(event)
-
 	if kv["round_start_message_status"] == 1 then
 		if kv["round_start_message"].Chat ~= nil then
 			PrintToAll(kv["round_start_message"].Chat, "chat")
@@ -246,7 +332,6 @@ function RoundStart(event)
 end
 
 function BombPlanted(event)
-
 	if kv["bomb_time_announce"] == 1 then
 	
 		local bombBackCounter = Convars:GetInt("mp_c4timer")
@@ -269,13 +354,11 @@ function BombPlanted(event)
 			if bombBackCounter ~= 0 then
 				return 1.0
 			end
-			end
-		)
+		end)
 	end
 end
 
 if loadCFG() then
-
 	Timers:CreateTimer(function()
 		local counter = currentAd
 		if kv["adverts"][tostring(counter)].Chat ~= nil then
@@ -286,6 +369,14 @@ if loadCFG() then
 			PrintToAll(kv["adverts"][tostring(counter)].Center, "center")
 		end
 		
+		if kv["adverts"][tostring(counter)].Panel ~= nil then
+			HC_ShowPanelInfo(kv["adverts"][tostring(counter)]["Panel"]["message"], kv["adverts"][tostring(counter)]["Panel"]["time"])
+		end
+		
+		if kv["adverts"][tostring(counter)].Hint ~= nil then
+			HC_ShowInstructorHint(kv["adverts"][tostring(counter)]["Hint"]["message"], kv["adverts"][tostring(counter)]["Hint"]["time"], kv["adverts"][tostring(counter)]["Hint"]["icon"])
+		end
+		
 		currentAd = currentAd + 1
 		
 		if currentAd > totalAds then 
@@ -293,8 +384,7 @@ if loadCFG() then
 		end 
 		
 		return timeAds
-		end
-	)
+	end)
 end
 
 ListenToGameEvent("player_connect", PlayerConnect, self)

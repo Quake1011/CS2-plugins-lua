@@ -32,6 +32,34 @@ sv_cheats 0
 
 ## Config file 
 ```
+// -------------- output types
+// Chat - print in common text chat								Color tags below
+// Center - - print in common center window below middle		Doesn't support colors
+// Panel - - print in common center win panel above middle		HTML font colors			| type only for adverts
+// Hint - - print in common center tip below middle				Doesn't support colors      | type only for adverts
+
+// -------------- colors
+// {WHITE},{DARKRED},{PURPLE},{DARKGREEN},{LIGHTGREEN},{GREEN},{RED},{LIGHTGREY},{YELLOW},{ORANGE},{DARKGREY},{BLUE},{DARKBLUE},{GRAY},{DARKPURPLE},{LIGHTRED}
+
+// -------------- usefull tags
+// {NL} - new line
+// {IP}	- server ip						taken from hostip ConVar
+// {PORT} - server port					taken from hostport ConVar
+// {MAXPL} - max players number 		taken from sv_visiblemaxplayers ConVar
+// {PL} - current players number
+// {MAP} - current map
+// {NEXTMAP} - next map
+// {TIME} - current server time
+// {DISCORD} - discord link 			taken from "discord_invite_link" key
+// {VK} - vkontakte link 				taken from "vk_link" key
+// {TG} - telegram link 				taken from "telegram" key
+// {SITE} - site link					taken from "site_link" key
+// {INST} - instagram link              taken from "inst_link" key
+// {TT} - tiktok link                   taken from "tik_tok_link" key
+// {YT} - youtube link					taken from "youtube_link" key
+// {STEAM} - steam group link           taken from "steam_link" key
+// {GROUP} - group link                 taken from "community_link" key
+
 "Plugins"
 {
 	"kill_announce"					"1"		// player death announcer [0 - off | 1 - on]
@@ -41,7 +69,7 @@ sv_cheats 0
 	//	{distance} - distance between at death
 	//
 	
-	"bot_connect_announce"			"1"		// whether to display the connection of bots [0 - off | 1 - on]
+	"bot_connect_announce"			"1"		// whether to display the connection of bots 
 	"connect_announce"				"1"		// player connect announcer [0 - off | 1 - on]
 	"connect_announce_message"		" {DARKRED}|| {WHITE} Игрок {DARKGREEN}{user} {WHITE}зашел на сервер{NL} {DARKRED}||{WHITE} Статус: {GREEN}{botstatus}{NL} {DARKRED}||{WHITE} IP: {GREEN}{ipclient}{NL} {DARKRED}||{WHITE} SteamID2: {GREEN}{steamid2}{NL} {DARKRED}||{WHITE} SteamID3: {GREEN}{steamid3}"
 	//	{user} - player who connected
@@ -75,74 +103,63 @@ sv_cheats 0
 	"round_end_message"	// print message every round end block
 	{
 		"Chat"			"Round End now!"
-		"Center"		"Visit our site: mysite.ru"
+		"Center"		"Visit our site: {SITE}"
 	}
 	
-	"time" 	"35.0" // time between ads. Set it to 0.0 if u want not use cycled advs below
-	"discord"			"https://discord.gg/3JbqDN4"		// for {DISCORD} tag
-	"vk"				"https://vk.com/bgtroll"			// for {VK} tag
-	"telegram"			"https://t.me/ArrayListX"			// for {TG} tag	
+	"time" 	"10.0" // time between ads. Set it to 0.0 if u want not use cycled advs below
+	
+	// if u want remove several links u can do this just delete all string and set value of key to void
+	"discord_invite_link"		"3JbqDN4"										// Invlite-link to discord 			----> for {DISCORD} tag. In output prints like https://discord.gg/3JbqDN4
+	"vk_link"					"https://vk.com/bgtroll"						// Link to vk profile or group 		----> for {VK} tag
+	"telegram_link"				"https://t.me/ArrayListX"						// Link to telegram  				----> for {TG} tag	
+	"site_link"					"https://mysite.ru/"							// Link on your own site			----> for {SITE} tag
+	"inst_link"					"https://www.instagram.com/quake1011/"			// Link on your instagram			----> for {INST} tag
+	"tik_tok_link"				"https://www.tiktok.com/@quake1011"				// Link on your tik tok				----> for {TT} tag
+	"youtube_link"				"https://www.youtube.com/@quake1011"			// Link on your youtube				----> for {YT} tag
+	"steam_link"				"https://steamcommunity.com/groups/quake1011"	// Link on your steam group			----> for {STEAM} tag
+	"community_link"			"https://mycommunity.com/community/quake1011"	// Link on your own community		----> for {GROUP} tag
+	
 	"adverts"  
 	{	
 		
 		"1"		// advert block
 		{
-			"Chat"			" {DARKRED}[ INFO ]{WHITE} Добавьте наш сервер в избранное: {DARKGREEN}{IP}:{PORT}"
+			"Chat"			"{DARKRED}[ INFO ]{WHITE} Добавьте наш сервер в избранное: {DARKGREEN}{IP}:{PORT}" 
 			"Center"		"Добавьте наш сервер в избранное: {IP}:{PORT}"
 		}
 		"2"		
 		{
-			"Chat"			" {YELLOW}---- ---- ---- Контакты ---- ---- ----{NL}{WHITE}Telegram - {DARKPURPLE}{TG}{NL}{WHITE}VK - {BLUE}{VK}{NL}{WHITE}Discord - {DARKBLUE}{DISCORD}{NL}{YELLOW}---- ---- ---- ---- ---- ---- ---- ----"
+			"Chat"			"{YELLOW}---- ---- ---- Контакты ---- ---- ----{NL}{WHITE}Telegram - {DARKPURPLE}{TG}{NL}{WHITE}VK - {BLUE}{VK}{NL}{WHITE}Discord - {DARKBLUE}{DISCORD}{NL}{YELLOW}---- ---- ---- ---- ---- ---- ---- ----"
 		}
 		"3"		
 		{
-			"Chat"			" {DARKRED}[ INFO ]{WHITE} Введите {DARKGREEN}!rank {WHITE}для вывода личной статистики{DARKRED}"
+			"Chat"			"{DARKRED}[ INFO ]{WHITE} Введите {DARKGREEN}!rank {WHITE}для вывода личной статистики{DARKRED} (в разработке)"
+			"Panel"
+			{
+				"message"	"<font color='#00FF00'>This contains <font class='fontSize-l'>cs_win_panel_round</font> advert</font>"		// text 
+				"time"		"5"				//  time existing of message 
+			}
+			"Hint"		// gameinstructor_enable should be enabled on clients for them to see it because valve delete this option in settings. If hint dont work then type in console this command
+			{
+				"message"	"This contains env_instructor_hint advert"	// text 
+				"time"		"5"				//  time existing of panel 
+				"icon"		"icon_alert"		// icons for output near text https://developer.valvesoftware.com/wiki/Env_instructor_hint#Icons
+			}
 		}
 		"4"		
 		{
-			"Chat"			" {DARKRED}[ INFO ] {WHITE}Игроки: {PL}/{MAXPL}{NL} {DARKRED}[ INFO ] {WHITE}Текущая карта: {MAP}{NL} {DARKRED}[ INFO ] {WHITE}Следующая карта: {NEXTMAP}"
+			"Chat"			"{DARKRED}[ INFO ] {WHITE}Игроки: {PL}/{MAXPL}{NL} {DARKRED}[ INFO ] {WHITE}Текущая карта: {MAP}{NL} {DARKRED}[ INFO ] {WHITE}Следующая карта: {NEXTMAP}"
 		}
 		"5"		
 		{
-			"Chat"			" {DARKRED}[ INFO ] {WHITE}Для смены карты введите в чат {GREEN}vote map_name"
+			"Chat"			"{DARKRED}[ INFO ] {WHITE}Для смены карты введите в чат {GREEN}vote map_name"
+		}
+		"6"		
+		{
+			"Chat"			"Hello. I am a string and i so{NL}l{NL}o{NL}o{NL}o{NL}o{NL}o{NL}o{NL}o{NL}n{NL}g" // you can do infinite size of advert by {NL} tag. Of course while chat dont end :D
 		}
 	}
 }
-
-// -------------- output types
-// Chat - print in common text chat
-// Center - - print in common center window below middle
-
-// -------------- colors (This is for chat only)
-// {WHITE} - white
-// {DARKRED}
-// {PURPLE}
-// {DARKGREEN}
-// {LIGHTGREEN}
-// {GREEN}
-// {RED}
-// {LIGHTGREY}
-// {YELLOW}
-// {ORANGE}
-// {DARKGREY}
-// {BLUE}
-// {DARKBLUE}
-// {GRAY}
-// {DARKPURPLE}
-// {LIGHTRED}
-
-// -------------- usefull tags
-// {NL} - new line
-// {IP}	- server ip						taken from hostip ConVar
-// {PORT} - server port					taken from hostport ConVar
-// {MAXPL} - max players number 		taken from sv_visiblemaxplayers ConVar
-// {PL} - current players number
-// {MAP} - current map
-// {NEXTMAP} - next map
-// {TIME} - current server time
-// {DISCORD} - discord link 			taken from "discord" key
-// {VK} - vkontakte link 				taken from "vk" key
-// {TG} - telegram link 				taken from "telegram" key
 ```
 
 ## About possible problems, please let me know: 
