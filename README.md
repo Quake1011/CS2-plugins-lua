@@ -1,6 +1,7 @@
 # CS2-plugins-lua
-Includes 6 mini lua plugins for CS2
+Includes 7 mini lua plugins for CS2
 
+- Ammo refill after kill
 - Connect/disconnect events announcer
 - Team switch announcer
 - Advertisement
@@ -16,12 +17,15 @@ Includes 6 mini lua plugins for CS2
 ![image](https://github.com/Quake1011/CS2-plugins-lua/assets/58555031/64fafb2d-45d1-49ae-bec1-0b1a80cef984)
 
 ## Install
-Place it in **game\csgo\scripts** and add to **gamemode_*****.cfg** next lines:
+1) Place it in **game\csgo\scripts** if folder not exist then you should to make it
+2) Add to **gamemode_your_gamemode_name.cfg** next lines:
 ```
 sv_cheats 1
 script_reload_code plugins
 sv_cheats 0
 ```
+3) Reload the server
+
 
 ## Requirements
 - patching vscript.dll:
@@ -52,7 +56,7 @@ sv_cheats 0
 // {TIME} - current server time
 // {DISCORD} - discord link 			taken from "discord_invite_link" key
 // {VK} - vkontakte link 				taken from "vk_link" key
-// {TG} - telegram link 				taken from "telegram" key
+// {TG} - telegram link 				taken from "telegram_link" key
 // {SITE} - site link					taken from "site_link" key
 // {INST} - instagram link              taken from "inst_link" key
 // {TT} - tiktok link                   taken from "tik_tok_link" key
@@ -61,7 +65,13 @@ sv_cheats 0
 // {GROUP} - group link                 taken from "community_link" key
 
 "Plugins"
-{
+{	
+	// ========================AMMO REFILLER BLOCK========================
+	"kill_ammo_refill"				"1"	// Refill ammo when player kill? 				[	0 - on			|	1 - off			]
+	"ammo_type_refill"				"3"	// Type of ammo for refilling 					[	1 - clip		|	2 - reserved	|	3 - all		]
+	"all_equiped_weapon"			"1"	// Refill all equipped weapons or currently?	[	0 - currently	|	1 - all			]
+
+	// ========================KILL ANNOUNCER BLOCK========================
 	"kill_announce"					"1"		// player death announcer [0 - off | 1 - on]
 	"kill_announce_message"			" {DARKRED}[ KILL ]{WHITE} Игрок {DARKGREEN}{attacker}{WHITE} убил {DARKGREEN}{user} {WHITE}с расстояния: {DARKRED}{distance}м."
 	//	{attacker} - killer
@@ -69,6 +79,7 @@ sv_cheats 0
 	//	{distance} - distance between at death
 	//
 	
+	// ========================CONNECT/DISCONNECT ANNOUNCER BLOCK========================
 	"bot_connect_announce"			"1"		// whether to display the connection of bots 
 	"connect_announce"				"1"		// player connect announcer [0 - off | 1 - on]
 	"connect_announce_message"		" {DARKRED}|| {WHITE} Игрок {DARKGREEN}{user} {WHITE}зашел на сервер{NL} {DARKRED}||{WHITE} Статус: {GREEN}{botstatus}{NL} {DARKRED}||{WHITE} IP: {GREEN}{ipclient}{NL} {DARKRED}||{WHITE} SteamID2: {GREEN}{steamid2}{NL} {DARKRED}||{WHITE} SteamID3: {GREEN}{steamid3}"
@@ -85,14 +96,17 @@ sv_cheats 0
 	//	{user} - player who disconnected
 	//
 	
+	// ========================CHANGE TEAM ANNOUNCER BLOCK========================
 	"change_team_announce"			"1"		// player change team announcer [0 - off | 1 - on]
 	"change_team_announce_message"	" {DARKRED}[ TEAM ]{WHITE} Игрок {LIGHTGREEN}{user} {WHITE}перешел за команду {ORANGE}{team}"
 	//	{user} - player who changed team
 	//	{team}	- new team
 	//
 	
+	// ========================BOMB TIMER ANNOUNCER BLOCK========================
 	"bomb_time_announce"			"1"		// announce every 20, 10, 5, 4, 3, 2, 1, 0 seconds explode remaining [0 - off | 1 - on]
 	
+	// ========================ROUND END/START ANNOUNCER BLOCK========================
 	"round_start_message_status"	"0"		// round start announcer [0 - off | 1 - on]
 	"round_start_message" // print message every round start block
 	{
@@ -106,18 +120,19 @@ sv_cheats 0
 		"Center"		"Visit our site: {SITE}"
 	}
 	
+	// ========================ADVERTISEMENT BLOCK========================
 	"time" 	"10.0" // time between ads. Set it to 0.0 if u want not use cycled advs below
 	
 	// if u want remove several links u can do this just delete all string and set value of key to void
 	"discord_invite_link"		"3JbqDN4"										// Invlite-link to discord 			----> for {DISCORD} tag. In output prints like https://discord.gg/3JbqDN4
 	"vk_link"					"https://vk.com/bgtroll"						// Link to vk profile or group 		----> for {VK} tag
 	"telegram_link"				"https://t.me/ArrayListX"						// Link to telegram  				----> for {TG} tag	
-	"site_link"					"https://mysite.ru/"							// Link on your own site			----> for {SITE} tag
-	"inst_link"					"https://www.instagram.com/quake1011/"			// Link on your instagram			----> for {INST} tag
-	"tik_tok_link"				"https://www.tiktok.com/@quake1011"				// Link on your tik tok				----> for {TT} tag
-	"youtube_link"				"https://www.youtube.com/@quake1011"			// Link on your youtube				----> for {YT} tag
-	"steam_link"				"https://steamcommunity.com/groups/quake1011"	// Link on your steam group			----> for {STEAM} tag
-	"community_link"			"https://mycommunity.com/community/quake1011"	// Link on your own community		----> for {GROUP} tag
+	"site_link"					"https://mysite.ru/"							// Link to your own site			----> for {SITE} tag
+	"inst_link"					"https://www.instagram.com/quake1011/"			// Link to instagram				----> for {INST} tag
+	"tik_tok_link"				"https://www.tiktok.com/@quake1011"				// Link to tik tok					----> for {TT} tag
+	"youtube_link"				"https://www.youtube.com/@quake1011"			// Link to youtube					----> for {YT} tag
+	"steam_link"				"https://steamcommunity.com/groups/quake1011"	// Link to steam group				----> for {STEAM} tag
+	"community_link"			"https://mycommunity.com/community/quake1011"	// Link to own community			----> for {GROUP} tag
 	
 	"adverts"  
 	{	

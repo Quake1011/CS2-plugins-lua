@@ -1,24 +1,24 @@
 require('includes/timers')
 
-print 	('#############################################')
-print 	('Plugins Loaded')
-print	('Author:\t\t\t\tPalonez')
-print	('Version:\t\t\t0.7')
-print	('Discord:\t\t\tquake1011')
-print	('Github:\t\t\t\tQuake1011')
-print	('If u`ve an idea im ready to listen it')
-print 	('#############################################')
+print('#############################################')
+print('Plugins Loaded')
+print('Author:\t\t\t\tPalonez')
+print('Version:\t\t\t0.8')
+print('Discord:\t\t\tquake1011')
+print('Github:\t\t\t\tQuake1011')
+print('If u`ve an idea im ready to listen it')
+print('#############################################')
 
 local vkontakte, telegram, discord, c4t, site, instagram, tiktok, youtube, steam, group
 local totalAds = 0
 local currentAd = 1
 local names = {}
 
+local weapons_ammo = LoadKeyValues("scripts/configs/weapons.ini")
 local kv = LoadKeyValues("scripts/configs/plugins.ini")
 
 function intToIp(int)
-	local ip = bit.rshift(bit.band(int, 0xFF000000), 24) .. "." .. bit.rshift(bit.band(int, 0x00FF0000), 16) .. "." .. bit.rshift(bit.band(int, 0x0000FF00), 8) .. "." .. bit.band(int, 0x000000FF)
-	return ip
+	return bit.rshift(bit.band(int, 0xFF000000), 24) .. "." .. bit.rshift(bit.band(int, 0x00FF0000), 16) .. "." .. bit.rshift(bit.band(int, 0x0000FF00), 8) .. "." .. bit.band(int, 0x000000FF)
 end
 
 function ReplaceTags(str)
@@ -142,10 +142,10 @@ function loadCFG()
 		end
 		
 		return true
-	else 
-		print("Couldn't load config file scripts/configs/plugins.ini")
-		return false
 	end
+	
+	print("Couldn't load config file scripts/configs/plugins.ini")
+	return false
 end
 
 function formatAdr(address)
@@ -192,10 +192,9 @@ function GetNameByID(id)
 	for k, v in pairs(names) do
 		if k == id then
 			return v
-		else 
-			return nil
 		end
 	end
+	return nil
 end
 
 function PlayerDisconnect(event)
@@ -214,12 +213,15 @@ end
 
 function PlayerDeath(event)
 	local attacker, user
-	
 	for k, v in pairs(names) do
 		if k == event["attacker"] then
 			attacker = v
 		elseif k == event["userid"] then
 			user = v
+		end
+		
+		if k ~= nil and v ~= nil then
+			break
 		end
 	end
 	if attacker ~= nil and user ~= nil then
@@ -234,6 +236,51 @@ function PlayerDeath(event)
 				end
 			end
 		end
+	end
+	if event["attacker_pawn"] ~= nil then
+		if attacker ~= user then
+			if kv["kill_ammo_refill"] == 1 then
+				for k, eqWeapon in pairs(EntIndexToHScript(bit.band(event["attacker_pawn"], 0x3FFF)):GetEquippedWeapons()) do
+					local weaponName = eqWeapon:GetClassname()
+					weaponName = string.sub(weaponName, 8)
+					
+					if kv["all_equiped_weapon"] == 0 then
+						if weaponName == event["weapon"] then
+							SetWeaponAmmo(eqWeapon)
+							break
+						end
+					else
+						if findInTableKey(weapons_ammo, weaponName) == true then
+							SetWeaponAmmo(eqWeapon)
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
+function findInTableKey(tTable, key)
+	for k,v in pairs(tTable) do
+		if k == key then
+			return true
+		end
+	end
+	return false
+end
+
+function SetWeaponAmmo(instance)
+	if instance ~= nil then
+		local class = instance:GetClassname()
+		class = string.sub(class, 8)
+		if kv["ammo_type_refill"] == 1 then
+			DoEntFireByInstanceHandle(instance, "SetAmmoAmount", tostring(weapons_ammo[class]["clip"]), 0, nil, nil)
+		elseif kv["ammo_type_refill"] == 2 then 
+			DoEntFireByInstanceHandle(instance, "SetReserveAmmoAmount", tostring(weapons_ammo[class]["reserved"]), 0, nil, nil)
+		elseif kv["ammo_type_refill"] == 3 then
+			DoEntFireByInstanceHandle(instance, "SetAmmoAmount", tostring(weapons_ammo[class]["clip"]), 0, nil, nil)
+			DoEntFireByInstanceHandle(instance, "SetReserveAmmoAmount", tostring(weapons_ammo[class]["reserved"]), 0, nil, nil)
+		end 		
 	end
 end
 
@@ -267,11 +314,7 @@ end
 
 -- takes from https://github.com/NickFox007/LuaHudcoreCS2/blob/e14b7158456f300d25a888382d6ee884f93ec118/hudcore.lua#L55
 function HC_ShowPanelInfo(text, duration)
-	local netTable = {}	
-	netTable["funfact_token"] = text
-	
-	FireGameEvent( "cs_win_panel_round", netTable )
-	
+	FireGameEvent("cs_win_panel_round", {["funfact_token"] = text})
 	Timers:CreateTimer({
 		endTime = duration,
 		callback = function()
@@ -281,7 +324,7 @@ function HC_ShowPanelInfo(text, duration)
 end
 
 function HC_ResetPanelInfo()	
-	FireGameEvent( "round_start", nil )
+	FireGameEvent("round_start", nil)
 end
 
 function HC_ShowInstructorHint(text, duration, icon)
@@ -344,7 +387,7 @@ function BombPlanted(event)
 			end
 			
 			if bombBackCounter == 20 or bombBackCounter == 10 then
-				PrintToAll("До взрыва осталось: " .. bombBackCounter .. " секунд", "center")
+				PrintToAll("before the explosion is left: " .. bombBackCounter .. " seconds", "center")
 			end
 			
 			if bombBackCounter <= 5 then
