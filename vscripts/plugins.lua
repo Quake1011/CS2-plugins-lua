@@ -362,6 +362,9 @@ function RoundStart(event)
 			PrintToAll(kv["round_start_message"].Center, "center")
 		end
 	end
+	if c4t ~= nil then	
+		Timers:RemoveTimer(c4t)
+	end
 end
 
 function BombPlanted(event)
