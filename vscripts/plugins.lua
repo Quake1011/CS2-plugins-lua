@@ -212,18 +212,8 @@ function PlayerDisconnect(event)
 end
 
 function PlayerDeath(event)
-	local attacker, user
-	for k, v in pairs(names) do
-		if k == event["attacker"] then
-			attacker = v
-		elseif k == event["userid"] then
-			user = v
-		end
-		
-		if k ~= nil and v ~= nil then
-			break
-		end
-	end
+	local attacker = names[event["attacker"]]
+	local user = names[event["userid"]]
 	if attacker ~= nil and user ~= nil then
 		if attacker ~= user then
 			if event["distance"] ~= nil then 
