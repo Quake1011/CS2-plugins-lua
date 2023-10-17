@@ -292,15 +292,12 @@ function PlayerDeath(event)
 							if kv["health_refill_value"] == "all" then
 								player:SetHealth(player:GetMaxHealth())
 							elseif type(kv["health_refill_value"]) == "number" and kv["health_refill_value"] >= 0 then
-<<<<<<< Updated upstream
 								player:SetHealth(player:GetHealth()+tonumber(kv["health_refill_value"]))
-=======
 								if player:GetHealth()+kv["health_refill_value"] <= player:GetMaxHealth() then
 									player:SetHealth(player:GetHealth()+kv["health_refill_value"])
 								else 
 									player:SetHealth(player:GetHealth()+(player:GetMaxHealth()-player:GetHealth()))
 								end
->>>>>>> Stashed changes
 							end
 						end
 						for k, eqWeapon in pairs(player:GetEquippedWeapons()) do
