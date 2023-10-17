@@ -292,7 +292,7 @@ function PlayerDeath(event)
 							if kv["health_refill_value"] == "all" then
 								player:SetHealth(player:GetMaxHealth())
 							elseif type(kv["health_refill_value"]) == "number" and kv["health_refill_value"] >= 0 then
-								player:SetHealth(kv["health_refill_value"])
+								player:SetHealth(player:GetHealth()+tonumber(kv["health_refill_value"]))
 							end
 						end
 						for k, eqWeapon in pairs(player:GetEquippedWeapons()) do
