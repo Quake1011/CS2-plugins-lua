@@ -43,6 +43,27 @@ sv_cheats 0
  	- [method-3](https://github.com/bklol/vscriptPatch/tree/main)
  	- [method-4](https://hlmod.net/threads/source-2-skripting.64842/page-6#post-631991)(easilier)
 
+## Commands
+For admin:
+- kickit <uid> <reason> - kick player from server
+- setmap <map> <changetime> - change the map after the specified time interval in seconds
+- conexec <convar> <newvalue> - change the value of the server variable
+- asay <message> - write a message from the admin to the chat (all characters up to 127 ascii encoding)
+- hp <uid> <value> - set the number of hp to the player
+- size <uid> <value> - set the player size (any decimal positive number, for example 0.5 or 49.0)
+- clr <uid> <r> <g> <b> <a> - set color and transparency to the player (all RGBA numbers within 0 - 255)
+- grav <uid> <value> - set gravity to the player (any decimal positive number, for example 0.5 or 49.0)
+- fric <uid> <value> - to set the grip on the surface of the player (any decimal positive number, for example 0.5 or 49.0)
+- disarm <uid> <weapon_classname> - remove the player's weapon, for example, weapon_ak47. Delete all weapons - instead of <weapon_classname> write - @all
+- killit <uid> - kill the player
+- changeteam <uid> <team> - change the player's team (team number or short name. For example ct or 3)
+- hudstatus <uid> <status> - turn off or turn off the hood to the player (0 or 1)
+  
+For all:
+- login <password> - getting administrator rights for a session
+- votemap <mapname> - vote for the card
+- suicide - kill yourself
+
 ## Config file 
 ```
 // -------------- output types
