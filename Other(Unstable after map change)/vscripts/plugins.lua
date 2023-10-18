@@ -1,4 +1,5 @@
 require('includes/timers')
+require('includes/utils')
 
 print('#############################################')
 print('\tPlugins Loaded')
@@ -43,63 +44,13 @@ function PlayerVotedAlready(player_handle)
 	return false 
 end
 
-function PP__GetMapName(map)
+function P__GetMapName(map)
 	for k,v in pairs(maplist["maps"]) do
-		if v == map then
-			return tostring(k)
+		if k == map then
+			return tostring(v)
 		end
 	end
 	return tostring(map)
-end
-
-function PReplaceTags(str)
-	str = string.gsub(str, "{WHITE}", "\x01")
-	str = string.gsub(str, "{DARKRED}", "\x02")
-	str = string.gsub(str, "{PURPLE}", "\x03")
-	str = string.gsub(str, "{DARKGREEN}", "\x04")
-	str = string.gsub(str, "{LIGHTGREEN}", "\x05")
-	str = string.gsub(str, "{GREEN}", "\x06")
-	str = string.gsub(str, "{RED}", "\x07")
-	str = string.gsub(str, "{LIGHTGREY}", "\x08")
-	str = string.gsub(str, "{YELLOW}", "\x09")
-	str = string.gsub(str, "{ORANGE}", "\x10")
-	str = string.gsub(str, "{DARKGREY}", "\x0A")
-	str = string.gsub(str, "{BLUE}", "\x0B")
-	str = string.gsub(str, "{DARKBLUE}", "\x0C")
-	str = string.gsub(str, "{GRAY}", "\x0D")
-	str = string.gsub(str, "{DARKPURPLE}", "\x0E")
-	str = string.gsub(str, "{LIGHTRED}", "\x0F")
-	return str
-end
-
-function PPrintToAll(str, outType)
-	if outType == "chat" then
-		if string.find(str, "{NL}") ~= nil then
-			local laststr
-			local endIndex = string.find(str:reverse(), string.reverse("{NL}"), 1, true)
-
-			if endIndex then
-				endIndex = #str - endIndex + 1
-				laststr = string.sub(str, endIndex+1)
-			end
-
-			for substring in string.gmatch(str, "(.-)" .. "{NL}") do
-				ScriptPrintMessageChatAll(" " .. PReplaceTags(substring))
-			end
-			
-			ScriptPrintMessageChatAll(" " .. PReplaceTags(laststr))
-		else
-			ScriptPrintMessageChatAll(" " .. PReplaceTags(str))
-		end
-	elseif outType == "center" then
-		ScriptPrintMessageCenterAll(PReplaceTags(str))
-	end	
-end
-
-function SteamID3toSteamID2(networkid)
-	networkid = string.sub(networkid, 6)
-	networkid = string.gsub(networkid, "]", "")
-	return "STEAM_0:" .. bit.band(tonumber(networkid), 1) .. ":" .. bit.rshift(tonumber(networkid), 1)
 end
 
 function PlayerTeam(event)
@@ -125,7 +76,7 @@ function PlayerTeam(event)
 								local message = kv["change_team_announce_message"]
 								message = string.gsub(message, "{user}", player)
 								message = string.gsub(message, "{team}", team)
-								PPrintToAll(message, "chat")
+								PrintToAll(message, "chat")
 							end
 						end
 					end
@@ -152,7 +103,7 @@ function PlayerDeath(event)
 						message = string.gsub(message, "{attacker}", attacker)
 						message = string.gsub(message, "{user}", user)
 						message = string.gsub(message, "{distance}", tonumber(string.format("%.2f", event["distance"])))
-						PPrintToAll(message, "chat")
+						PrintToAll(message, "chat")
 					end
 				end
 			end
@@ -186,9 +137,6 @@ function WinPanelEnd(event)
 	local nexttime = Convars:GetInt("mp_endmatch_votenextleveltime")+5
 	local EndMatchTimer = Timers:CreateTimer(function()
 		if nexttime == 0 then
-			for userid, _ in pairs(Players) do
-				SendToServerConsole("kickid " .. userid .. " \"map changed. Connect to server again\"")
-			end
 			if EndMatchTimer ~= nil then
 				Timers:RemoveTimer(EndMatchTimer)
 			end
@@ -197,7 +145,7 @@ function WinPanelEnd(event)
 		if (nexttime > 0 and nexttime < 11) or (nexttime > 10 and nexttime % 5 == 0) then
 			local message = kv["endmatch_mapchange_message"]
 			message = string.gsub(message, "{seconds}", nexttime)
-			PPrintToAll(message, "chat")
+			PrintToAll(message, "chat")
 		end
 		nexttime = nexttime - 1
 		return 1.0
@@ -251,7 +199,7 @@ Convars:RegisterCommand("asay", function (_, ...)
 	end
 	
 	if IsAdmin(Convars:GetCommandClient()) == true then
-		PPrintToAll(kv["admin_message_tag"] .. kv["admin_message_color"] .. xxx, "chat")
+		PrintToAll(kv["admin_message_tag"] .. kv["admin_message_color"] .. xxx, "chat")
 	end
 	xxx = ""
 end, nil, 0)
@@ -275,9 +223,6 @@ Convars:RegisterCommand("setmap", function (_, map, chtime)
 			if nexttime >= 0 then
 				local mapTmr = Timers:CreateTimer(function()
 					if nexttime == 0 then
-						for userid, _ in pairs(Players) do
-							SendToServerConsole("kickid " .. userid .. " \"map changed to " .. chmpname .. ". Connect to server again\"")
-						end
 						SendToServerConsole("changelevel " .. map)
 						if mapTmr ~= nil then
 							Timers:RemoveTimer(mapTmr)
@@ -289,7 +234,7 @@ Convars:RegisterCommand("setmap", function (_, map, chtime)
 							local message = kv["admin_mapchange_message"]
 							message = string.gsub(message, "{seconds}", nexttime)
 							message = string.gsub(message, "{changemap}", chmpname)
-							PPrintToAll(message, "chat")
+							PrintToAll(message, "chat")
 						end
 					end
 					nexttime = nexttime - 1
@@ -320,7 +265,7 @@ Convars:RegisterCommand("kickit", function (_, userid, reason)
 					local messvge = kv["admin_kickall_message"]
 					messvge = string.gsub(messvge, "{user}", Players[tonumber(userid)].name)
 					messvge = string.gsub(messvge, "{reason}", reason)
-					PPrintToAll(messvge, "chat")
+					PrintToAll(messvge, "chat")
 				end
 			end
 		end
@@ -507,9 +452,6 @@ Convars:RegisterCommand("votemap", function (_, mapname)
 			if nexttime >= 0 then
 				local mapTmr = Timers:CreateTimer(function()
 					if nexttime == 0 then
-						for userid, _ in pairs(Players) do
-							SendToServerConsole("kickid " .. userid .. " \"map changed to " .. chmpname .. ". Connect to server again\"")
-						end
 						SendToServerConsole("changelevel " .. mapname)
 						if mapTmr ~= nil then
 							Timers:RemoveTimer(mapTmr)
@@ -521,7 +463,7 @@ Convars:RegisterCommand("votemap", function (_, mapname)
 							local message = kv["admin_mapchange_message"]
 							message = string.gsub(message, "{seconds}", nexttime)
 							message = string.gsub(message, "{changemap}", chmpname)
-							PPrintToAll(message, "chat")
+							PrintToAll(message, "chat")
 						end
 					end
 					nexttime = nexttime - 1
@@ -547,7 +489,7 @@ Convars:RegisterCommand("votemap", function (_, mapname)
 				local needpl = (#Entities:FindAllByClassname("player")*kv["votemap_require_votes"])
 				mssg = string.gsub(mssg, "{need}", math.floor(needpl+0.5))
 			end
-			PPrintToAll(mssg, "chat")
+			PrintToAll(mssg, "chat")
 		end
 	end
 end, nil, 0)

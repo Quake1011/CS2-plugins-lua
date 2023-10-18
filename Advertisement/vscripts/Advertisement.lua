@@ -1,4 +1,5 @@
 require('includes/timers')
+require('includes/utils')
 
 print('#############################################')
 print('\tAdvertisement Loaded')
@@ -16,51 +17,7 @@ local currentAd = 1
 local vkontakte, telegram, discord, c4t, site, instagram, tiktok, youtube, steam, group
 local kv = LoadKeyValues("scripts/configs/Advertisement.ini")
 
-function intToIp(int)
-	return bit.rshift(bit.band(int, 0xFF000000), 24) .. "." .. bit.rshift(bit.band(int, 0x00FF0000), 16) .. "." .. bit.rshift(bit.band(int, 0x0000FF00), 8) .. "." .. bit.band(int, 0x000000FF)
-end
-
-function APrintToAll(str, outType)
-	if outType == "chat" then
-		if string.find(str, "{NL}") ~= nil then
-			local laststr
-			local endIndex = string.find(str:reverse(), string.reverse("{NL}"), 1, true)
-
-			if endIndex then
-				endIndex = #str - endIndex + 1
-				laststr = string.sub(str, endIndex+1)
-			end
-
-			for substring in string.gmatch(str, "(.-)" .. "{NL}") do
-				ScriptPrintMessageChatAll(" " .. AReplaceTags(substring))
-			end
-			
-			ScriptPrintMessageChatAll(" " .. AReplaceTags(laststr))
-		else
-			ScriptPrintMessageChatAll(" " .. AReplaceTags(str))
-		end
-	elseif outType == "center" then
-		ScriptPrintMessageCenterAll(AReplaceTags(str))
-	end	
-end
-
-function AReplaceTags(str)
-	str = string.gsub(str, "{WHITE}", "\x01")
-	str = string.gsub(str, "{DARKRED}", "\x02")
-	str = string.gsub(str, "{PURPLE}", "\x03")
-	str = string.gsub(str, "{DARKGREEN}", "\x04")
-	str = string.gsub(str, "{LIGHTGREEN}", "\x05")
-	str = string.gsub(str, "{GREEN}", "\x06")
-	str = string.gsub(str, "{RED}", "\x07")
-	str = string.gsub(str, "{LIGHTGREY}", "\x08")
-	str = string.gsub(str, "{YELLOW}", "\x09")
-	str = string.gsub(str, "{ORANGE}", "\x10")
-	str = string.gsub(str, "{DARKGREY}", "\x0A")
-	str = string.gsub(str, "{BLUE}", "\x0B")
-	str = string.gsub(str, "{DARKBLUE}", "\x0C")
-	str = string.gsub(str, "{GRAY}", "\x0D")
-	str = string.gsub(str, "{DARKPURPLE}", "\x0E")
-	str = string.gsub(str, "{LIGHTRED}", "\x0F")
+function ReplaceUsefull(str)
 	str = string.gsub(str, "{PORT}", tostring(Convars:GetInt("hostport")))
 	str = string.gsub(str, "{IP}", intToIp(Convars:GetInt("hostip")))
 	str = string.gsub(str, "{MAXPL}", tostring(Convars:GetInt("sv_visiblemaxplayers")))
@@ -205,11 +162,11 @@ if loadCFG() then
 	Timers:CreateTimer(function()
 		local counter = currentAd
 		if kv["adverts"][tostring(counter)].Chat ~= nil then
-			APrintToAll(kv["adverts"][tostring(counter)].Chat, "chat")
+			PrintToAll(ReplaceUsefull(kv["adverts"][tostring(counter)].Chat), "chat")
 		end
 
 		if kv["adverts"][tostring(counter)].Center ~= nil then
-			APrintToAll(kv["adverts"][tostring(counter)].Center, "center")
+			PrintToAll(ReplaceUsefull(kv["adverts"][tostring(counter)].Center), "center")
 		end
 		
 		if kv["adverts"][tostring(counter)].Panel ~= nil then
