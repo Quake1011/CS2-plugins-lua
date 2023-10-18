@@ -10,15 +10,15 @@ function PrintToAll(str, outType)
 			end
 
 			for substring in string.gmatch(str, "(.-)" .. "{NL}") do
-				ScriptPrintMessageChatAll(" " .. PReplaceTags(substring))
+				ScriptPrintMessageChatAll(" " .. ReplaceTags(substring))
 			end
 			
-			ScriptPrintMessageChatAll(" " .. PReplaceTags(laststr))
+			ScriptPrintMessageChatAll(" " .. ReplaceTags(laststr))
 		else
-			ScriptPrintMessageChatAll(" " .. PReplaceTags(str))
+			ScriptPrintMessageChatAll(" " .. ReplaceTags(str))
 		end
 	elseif outType == "center" then
-		ScriptPrintMessageCenterAll(PReplaceTags(str))
+		ScriptPrintMessageCenterAll(ReplaceTags(str))
 	end	
 end
 
