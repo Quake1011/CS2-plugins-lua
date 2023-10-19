@@ -78,9 +78,6 @@ https://github.com/deaFPS
 https://vk.com/prodby4realraze(testing)
 
 ## About possible problems, please let me know: 
-- discord - quake1011
-All icons below are clickabled
-
 [<img src="https://i.ibb.co/LJz83MH/a681b18dd681f38e599286a07a92225d.png" width="15.3%"/>](https://discordapp.com/users/858709381088935976/)
 [<img src="https://i.ibb.co/tJTTmxP/vk-process-mining.png" width="15.3%"/>](https://vk.com/bgtroll)
 [<img src="https://i.ibb.co/VjhryGb/png-transparent-brand-logo-steam-gump-s.png" width="15.3%"/>](https://hlmod.ru/members/palonez.92448/)
