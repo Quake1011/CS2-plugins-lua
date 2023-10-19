@@ -26,7 +26,7 @@ https://github.com/Quake1011/CS2-plugins-lua/assets/58555031/50b5fdc8-c219-4b69-
 
 
 ## Install
-1) Place folder(s) in **game\csgo\scripts**. If **scripts** folder not exist then you should to make it
+1) Place contains of folder(s) in **game\csgo\scripts**. If **scripts** folder not exist then you should to make it
 2) Add to **gamemode_your_gamemode_name.cfg** next lines:
 > You can load all script or 1 one them if u want
 ```
