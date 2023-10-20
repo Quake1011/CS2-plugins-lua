@@ -24,7 +24,6 @@ https://github.com/Quake1011/CS2-plugins-lua/assets/58555031/50b5fdc8-c219-4b69-
 ![1696442440011](https://github.com/Quake1011/CS2-plugins-lua/assets/58555031/a64fc621-9969-4fab-bf96-d1c6e2b0fff5)
 ![273487569-64fafb2d-45d1-49ae-bec1-0b1a80cef984](https://github.com/Quake1011/CS2-plugins-lua/assets/58555031/eda2567b-42f2-4a3e-b9b9-51c67ce18f0f)
 
-
 ## Install
 1) Place contains of folder(s) in **game\csgo\scripts**. If **scripts** folder not exist then you should to make it
 2) Add to **gamemode_your_gamemode_name.cfg** next lines:
@@ -44,13 +43,27 @@ sv_cheats 0
 ```
 3) Reload the server
 
-
 ## Requirements
-- patching vscript.dll:
-	- [method-1](https://hlmod.net/threads/source-2-skripting.64842/post-631602)
-	- [method-2](https://github.com/Source2ZE/LuaUnlocker)
- 	- [method-3](https://github.com/bklol/vscriptPatch/tree/main)
- 	- [method-4](https://hlmod.net/threads/source-2-skripting.64842/page-6#post-631991)(easilier)
+### Patching
+- manual patching vscript.dll:
+	- **Windows VSCRIPT LIBRARY** - Counter-Strike Global Offensive\game\bin\win64\vscript.dll
+	- **Linux VSCRIPT LIBRARY** - Counter-Strike Global Offensive\game\bin\linuxsteamrt64\libvscript.so
+1) Open your **vscript.dll** / **libvscript.so** via any hex editor
+2)
+	- Replace byte-sequence:
+		- **Windows** - 01 00 00 00 2b d6 74 61 3b d6
+		- **Linux** - 01 0F 84 0A 02 00 00 83 FE 02
+	- to this byte-sequence:
+		- **Windows** - 02 00 00 00 2b d6 74 61 3b d6
+		- **Linux** - 02 0F 84 0A 02 00 00 83 FE 01
+ 4) Save the changes
+ 5) Success!
+   	   
+You can use one of automation methods below:
+- [method-1](https://hlmod.net/threads/source-2-skripting.64842/post-631602)(RU manual patching)
+- [method-2](https://github.com/Source2ZE/LuaUnlocker)(Autopatcher via metamod plugin)
+- [method-3](https://github.com/bklol/vscriptPatch/tree/main)(Python script patcher)
+- [method-4](https://hlmod.net/threads/source-2-skripting.64842/page-6#post-631991)(File replace. Unverified)
 
 ## Commands(Other)
 For admin:
