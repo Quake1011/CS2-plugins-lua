@@ -1,6 +1,6 @@
 # CS2-plugins-lua
 
-**IMPORTANT: Only for folder OTHER: Since when the map is changed, the player_connect event is not executed, in which all important data is transmitted, it was decided to kick all players at those moments when the map is changed so that they manually perform this event. Without it, the plugin is really useless and will not work.**
+**IMPORTANT: Only for folder OTHER: Since when the map is changed, the player_connect event is not executed, in which all important data is transmitted, because of this, after changing the map, some functions will not work for those players who were at the time of changing the map to the server until they are do reconnect**
 
 Includes 9 mini lua plugins for CS2
 
@@ -87,8 +87,8 @@ For all:
 - **suicide** - kill yourself
 
 ## Credits
-https://github.com/deaFPS
-https://vk.com/prodby4realraze(testing)
+- https://github.com/deaFPS
+- https://vk.com/prodby4realraze (testing)
 
 ## About possible problems, please let me know: 
 [<img src="https://i.ibb.co/LJz83MH/a681b18dd681f38e599286a07a92225d.png" width="15.3%"/>](https://discordapp.com/users/858709381088935976/)

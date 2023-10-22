@@ -132,26 +132,6 @@ function RoundStart(event)
     end
 end
 
-
-function WinPanelEnd(event)
-	local nexttime = Convars:GetInt("mp_endmatch_votenextleveltime")+5
-	local EndMatchTimer = Timers:CreateTimer(function()
-		if nexttime == 0 then
-			if EndMatchTimer ~= nil then
-				Timers:RemoveTimer(EndMatchTimer)
-			end
-		end
-
-		if (nexttime > 0 and nexttime < 11) or (nexttime > 10 and nexttime % 5 == 0) then
-			local message = kv["endmatch_mapchange_message"]
-			message = string.gsub(message, "{seconds}", nexttime)
-			PrintToAll(message, "chat")
-		end
-		nexttime = nexttime - 1
-		return 1.0
-	end)
-end
-
 function PlayerSpawn(event)
     local a = Players[event["userid"]]
     if a then
@@ -215,31 +195,38 @@ end, nil, 0)
 
 -- setmap <map> <changetime>
 Convars:RegisterCommand("setmap", function (_, map, chtime)
-	if IsAdmin(Convars:GetCommandClient()) == true then
-		if map ~= nil then
-			local nexttime = tonumber(chtime)
-			local chmpname = P__GetMapName(map)
+	if mapExists(mapname) == true then
+		if IsAdmin(Convars:GetCommandClient()) == true then
+			if map ~= nil then
+				local nexttime = tonumber(chtime)
+				local chmpname = P__GetMapName(map)
 
-			if nexttime >= 0 then
-				local mapTmr = Timers:CreateTimer(function()
-					if nexttime == 0 then
-						SendToServerConsole("changelevel " .. map)
-						if mapTmr ~= nil then
-							Timers:RemoveTimer(mapTmr)
+				if nexttime >= 0 then
+					local mapTmr = Timers:CreateTimer(function()
+						if nexttime == 0 then
+							SendToServerConsole("changelevel " .. map)
+							if mapTmr ~= nil then
+								Timers:RemoveTimer(mapTmr)
+							end
 						end
-					end
 
-					if kv["admin_mapchange_message_counter_status"] == 1 then
-						if (nexttime > 0 and nexttime < 11) or (nexttime > 10 and nexttime % 5 == 0) then
-							local message = kv["admin_mapchange_message"]
-							message = string.gsub(message, "{seconds}", nexttime)
-							message = string.gsub(message, "{changemap}", chmpname)
-							PrintToAll(message, "chat")
+						if kv["admin_mapchange_message_counter_status"] == 1 then
+							if (nexttime > 0 and nexttime < 11) or (nexttime > 10 and nexttime % 5 == 0) then
+								local message = kv["admin_mapchange_message"]
+								message = string.gsub(message, "{seconds}", nexttime)
+								message = string.gsub(message, "{changemap}", chmpname)
+								if kv["setmap_sound"] == 1 then
+									for k,v in pairs(Entities:FindAllByClassname("player")) do
+										DoEntFireByInstanceHandle(cmd, "command", "play ui/menu_accept.wav", 0.0, v, v)
+									end
+								end
+								PrintToAll(message, "chat")
+							end
 						end
-					end
-					nexttime = nexttime - 1
-					return 1.0
-				end)
+						nexttime = nexttime - 1
+						return 1.0
+					end)
+				end
 			end
 		end
 	end
@@ -254,7 +241,7 @@ Convars:RegisterCommand("kickit", function (_, userid, reason)
 				for _,v in pairs(Players) do
 					if v["userid_pawn"] ~= client then
 						SendToServerConsole("kickid " .. v["userid"] .. " kicked by reason: " .. reason)
-						ScriptPrintMessageCenterAll("ALL PLAYER HAS BEEN KICKED")
+						ScriptPrintMessageCenterAll("ALL PLAYERS HAS BEEN KICKED")
 					end
 				end
 			else
@@ -436,60 +423,76 @@ Convars:RegisterCommand("suicide", function ()
 	Convars:GetCommandClient():TakeDamage(CreateDamageInfo(Convars:GetCommandClient(), Convars:GetCommandClient(), Vector(0.0, 0.0, 0.0), Vector(0.0, 0.0, 0.0), 1337, 4))
 end, nil, 0) 
 
+function mapExists(map)
+	for k,v in pairs(maplist["maps"]) do
+		if k == map then
+			return true
+		end
+	end
+	return false
+end
+
 -- votemap <mapname>
 Convars:RegisterCommand("votemap", function (_, mapname)
-	if mapname ~= nil then
-		local player = Convars:GetCommandClient()
-		if PlayerVotedAlready(player) == true then
-			return
-		end		
-		
-		table.insert(TotalMapVotes[mapname], player)
-		if (kv["votemap_require_votes"] > 1 and #TotalMapVotes[mapname] >= kv["votemap_require_votes"]) or ((kv["votemap_require_votes"] < 1 and kv["votemap_require_votes"] > 0) and (#TotalMapVotes[mapname] >= math.floor((#Entities:FindAllByClassname("player")*kv["votemap_require_votes"])+0.5))) then
-			local nexttime = 10
-			local chmpname = P__GetMapName(mapname)
+	if mapExists(mapname) == true then
+		if mapname ~= nil then
+			local player = Convars:GetCommandClient()
+			if PlayerVotedAlready(player) == true then
+				return
+			end		
 			
-			if nexttime >= 0 then
-				local mapTmr = Timers:CreateTimer(function()
-					if nexttime == 0 then
-						SendToServerConsole("changelevel " .. mapname)
-						if mapTmr ~= nil then
-							Timers:RemoveTimer(mapTmr)
+			table.insert(TotalMapVotes[mapname], player)
+			if (kv["votemap_require_votes"] > 1 and #TotalMapVotes[mapname] >= kv["votemap_require_votes"]) or ((kv["votemap_require_votes"] < 1 and kv["votemap_require_votes"] > 0) and (#TotalMapVotes[mapname] >= math.floor((#Entities:FindAllByClassname("player")*kv["votemap_require_votes"])+0.5))) then
+				local nexttime = 10
+				local chmpname = P__GetMapName(mapname)
+				
+				if nexttime >= 0 then
+					local mapTmr = Timers:CreateTimer(function()
+						if nexttime == 0 then
+							SendToServerConsole("changelevel " .. mapname)
+							if mapTmr ~= nil then
+								Timers:RemoveTimer(mapTmr)
+							end
 						end
-					end
 
-					if kv["admin_mapchange_message_counter_status"] == 1 then
-						if (nexttime > 0 and nexttime < 11) or (nexttime > 10 and nexttime % 5 == 0) then
-							local message = kv["admin_mapchange_message"]
-							message = string.gsub(message, "{seconds}", nexttime)
-							message = string.gsub(message, "{changemap}", chmpname)
-							PrintToAll(message, "chat")
+						if kv["admin_mapchange_message_counter_status"] == 1 then
+							if (nexttime > 0 and nexttime < 11) or (nexttime > 10 and nexttime % 5 == 0) then
+								local message = kv["admin_mapchange_message"]
+								message = string.gsub(message, "{seconds}", nexttime)
+								message = string.gsub(message, "{changemap}", chmpname)
+								if kv["votemap_sound"] == 1 then
+									for k,v in pairs(Entities:FindAllByClassname("player")) do
+										DoEntFireByInstanceHandle(cmd, "command", "play ui/menu_accept.wav", 0.0, v, v)
+									end
+								end
+								PrintToAll(message, "chat")
+							end
 						end
-					end
-					nexttime = nexttime - 1
-					return 1.0
-				end)
-			end
-		end
-		if kv["votemap_enable_message"] == 1 then	
-			local playerName
-			for k,v in pairs(Players) do
-				if v["userid_pawn"] == player then
-					playerName = v["name"]
+						nexttime = nexttime - 1
+						return 1.0
+					end)
 				end
 			end
-			
-			local mssg = kv["votemap_voted_message"]
-			mssg = string.gsub(mssg, "{user}", playerName)
-			mssg = string.gsub(mssg, "{namemap}", P__GetMapName(mapname))
-			mssg = string.gsub(mssg, "{current}", #TotalMapVotes[mapname])
-			if kv["votemap_require_votes"] > 1 then
-				mssg = string.gsub(mssg, "{need}", kv["votemap_require_votes"])
-			elseif kv["votemap_require_votes"] < 1 and kv["votemap_require_votes"] > 0 then
-				local needpl = (#Entities:FindAllByClassname("player")*kv["votemap_require_votes"])
-				mssg = string.gsub(mssg, "{need}", math.floor(needpl+0.5))
+			if kv["votemap_enable_message"] == 1 then	
+				local playerName
+				for k,v in pairs(Players) do
+					if v["userid_pawn"] == player then
+						playerName = v["name"]
+					end
+				end
+				
+				local mssg = kv["votemap_voted_message"]
+				mssg = string.gsub(mssg, "{user}", playerName)
+				mssg = string.gsub(mssg, "{namemap}", P__GetMapName(mapname))
+				mssg = string.gsub(mssg, "{current}", #TotalMapVotes[mapname])
+				if kv["votemap_require_votes"] > 1 then
+					mssg = string.gsub(mssg, "{need}", kv["votemap_require_votes"])
+				elseif kv["votemap_require_votes"] < 1 and kv["votemap_require_votes"] > 0 then
+					local needpl = (#Entities:FindAllByClassname("player")*kv["votemap_require_votes"])
+					mssg = string.gsub(mssg, "{need}", math.floor(needpl+0.5))
+				end
+				PrintToAll(mssg, "chat")
 			end
-			PrintToAll(mssg, "chat")
 		end
 	end
 end, nil, 0)
@@ -500,4 +503,4 @@ ListenToGameEvent("player_death", PlayerDeath, nil)
 ListenToGameEvent("round_start", RoundStart, nil)
 ListenToGameEvent("player_team", PlayerTeam, nil)
 ListenToGameEvent("player_spawn", PlayerSpawn, nil)
-ListenToGameEvent("cs_win_panel_match", WinPanelEnd, nil)
+ListenToGameEvent("player_info", PlayerInfo, nil)
