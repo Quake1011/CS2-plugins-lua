@@ -2,7 +2,7 @@
 
 **IMPORTANT: Only for folder OTHER: Since when the map is changed, the player_connect event is not executed, in which all important data is transmitted, because of this, after changing the map, some functions will not work for those players who were at the time of changing the map to the server until they are do reconnect**
 
-Includes 9 mini lua plugins for CS2
+Includes 10 mini lua plugins for CS2
 
 - Mini-admin
 - Voting for map
@@ -13,6 +13,7 @@ Includes 9 mini lua plugins for CS2
 - Kill announcer with distance print
 - Round end/start announcer
 - Bomb explode announcer
+- Most destructive
 
 https://github.com/Quake1011/CS2-plugins-lua/assets/58555031/50b5fdc8-c219-4b69-9a0d-c0cf7e02ea92
 ![image](https://github.com/Quake1011/CS2-plugins-lua/assets/58555031/7a1a3172-cbd2-46dd-8b57-a84f0e47f457)
