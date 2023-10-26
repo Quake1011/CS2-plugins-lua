@@ -15,17 +15,53 @@ Includes 12 mini lua plugins for CS2
 - Bomb explode announcer
 - Most destructive
 - Plant blocker
-- Weapon deleter(aka low leveled `weapon restrict`)
+- Weapon deleter(aka low-leveled `weapon restrictor`)
 
-https://github.com/Quake1011/CS2-plugins-lua/assets/58555031/50b5fdc8-c219-4b69-9a0d-c0cf7e02ea92
-![image](https://github.com/Quake1011/CS2-plugins-lua/assets/58555031/7a1a3172-cbd2-46dd-8b57-a84f0e47f457)
-![image](https://github.com/Quake1011/CS2-plugins-lua/assets/58555031/9d107fa1-e816-43ba-8cb6-fd1f5d323fa3)
-![1696519118102](https://github.com/Quake1011/CS2-plugins-lua/assets/58555031/b8828d36-0c12-4194-969a-642f20feb42c)
-![1696462889660](https://github.com/Quake1011/CS2-plugins-lua/assets/58555031/d577bdcf-8061-438d-b99a-36e2fb518a63)
-![1696442132297](https://github.com/Quake1011/CS2-plugins-lua/assets/58555031/c9c87e28-922b-4b4d-8d0c-03767a1556a3)
-![1696442460163](https://github.com/Quake1011/CS2-plugins-lua/assets/58555031/1b648968-de98-453f-8848-7c514f71a266)
-![1696442440011](https://github.com/Quake1011/CS2-plugins-lua/assets/58555031/a64fc621-9969-4fab-bf96-d1c6e2b0fff5)
-![273487569-64fafb2d-45d1-49ae-bec1-0b1a80cef984](https://github.com/Quake1011/CS2-plugins-lua/assets/58555031/eda2567b-42f2-4a3e-b9b9-51c67ce18f0f)
+## Preview
+<details> 
+	<summary>Weapon Deleter(Weapon Restrict)</summary>
+	<img src="https://github.com/Quake1011/CS2-plugins-lua/assets/58555031/b5e0f174-e15b-48e6-bc6d-2011b68c9703">
+</details>
+<details> 
+	<summary>Admin message</summary>
+	<img src="https://github.com/Quake1011/CS2-plugins-lua/assets/58555031/7a1a3172-cbd2-46dd-8b57-a84f0e47f457">
+</details>
+<details> 
+	<summary>Voting to map</summary>
+	<img src="https://github.com/Quake1011/CS2-plugins-lua/assets/58555031/9d107fa1-e816-43ba-8cb6-fd1f5d323fa3">
+</details>
+<details> 
+	<summary>Bomb explode announcer</summary>
+	<img src="https://github.com/Quake1011/CS2-plugins-lua/assets/58555031/b8828d36-0c12-4194-969a-642f20feb42c">
+</details>
+<details> 
+	<summary>Round start and player team changing messages</summary>
+	<img src="https://github.com/Quake1011/CS2-plugins-lua/assets/58555031/d577bdcf-8061-438d-b99a-36e2fb518a63">
+</details>
+<details> 
+	<summary>Connect/disconnect messages</summary>
+	<img src="https://github.com/Quake1011/CS2-plugins-lua/assets/58555031/c9c87e28-922b-4b4d-8d0c-03767a1556a3">
+</details>
+<details> 
+	<summary>Kill announcer with distance print</summary>
+	<img src="https://github.com/Quake1011/CS2-plugins-lua/assets/58555031/1b648968-de98-453f-8848-7c514f71a266">
+</details>
+<details> 
+	<summary>Advertisement of your server</summary>
+	<img src="https://github.com/Quake1011/CS2-plugins-lua/assets/58555031/a64fc621-9969-4fab-bf96-d1c6e2b0fff5">
+</details>
+<details> 
+	<summary>Extended connect message</summary>
+	<img src="https://github.com/Quake1011/CS2-plugins-lua/assets/58555031/eda2567b-42f2-4a3e-b9b9-51c67ce18f0f">
+</details>
+<details> 
+	<summary>Plant blocker</summary>
+	<img src="https://github.com/Quake1011/CS2-plugins-lua/assets/58555031/e961de7f-90eb-46ca-81ab-d91abe405992">
+</details>
+
+**Ammo and health refiller:**
+> 
+> https://github.com/Quake1011/CS2-plugins-lua/assets/58555031/50b5fdc8-c219-4b69-9a0d-c0cf7e02ea92
 
 ## Install
 1) Place contains of folder(s) in **game\csgo\scripts**. If **scripts** folder not exist then you should to make it
@@ -86,7 +122,7 @@ For admin:
   
 For all:
 - **login \<password\>** - getting administrator rights for a session
-- **votemap \<mapname\>** - vote for the card
+- **votemap \<mapname\>** - vote for the map
 - **suicide** - kill yourself
 
 ## Credits
