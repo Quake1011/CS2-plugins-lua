@@ -19,7 +19,14 @@ function Start(event)
         cmd = SpawnEntityFromTableSynchronous("point_clientcommand", { targetname = "vscript_clientcommand" })
     end
 	
-	PrintToAll(ReplaceTags("{ORANGE}< === [ {WHITE}Restricted weapons {ORANGE}] === > {WHITE}{NL}" .. RestrictedArrayLikeString(cfg)), "chat")
+	local weap_array = cfg
+	weap_array["message_status"] = nil
+	weap_array["sound_status"] = nil
+	weap_array["sound_path"] = nil
+	
+	if cfg["message_status"] == 1 then
+		PrintToAll(ReplaceTags("{ORANGE}< === [ {WHITE}Restricted weapons {ORANGE}] === > {WHITE}{NL}" .. RestrictedArrayLikeString(weap_array)), "chat")
+	end
 end
 
 function RestrictedArrayLikeString(restricted_array)
@@ -50,7 +57,9 @@ function Pickup(event)
 		for _,v in pairs(hPlayer:GetEquippedWeapons()) do
 			if wName == v:GetClassname() and CheckRestrictedForPlayer(wName, hPlayer) == true then
 				v:Kill()
-				DoEntFireByInstanceHandle(cmd, "command", "play ui/beep22.wav", 0.2, hPlayer, hPlayer)
+				if cfg["sound_status"] == 1 then
+					DoEntFireByInstanceHandle(cmd, "command", "play " .. cfg["sound_path"], 0.2, hPlayer, hPlayer)
+				end
 				DoEntFireByInstanceHandle(cmd, "command", "lastinv", 0.1, hPlayer, hPlayer)
 			end
 		end
