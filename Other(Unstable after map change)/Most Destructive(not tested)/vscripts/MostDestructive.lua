@@ -1,6 +1,6 @@
 local PlayersDamageDelt = {}
 
-_VERSION_ = 1.0
+local _VERSION_ = 1.0
 
 function playerHurt(event)
 	attacker = EntIndexToHScript(bit.band(event.attacker_pawn, 0x3FFF))

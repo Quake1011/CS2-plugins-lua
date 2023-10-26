@@ -1,15 +1,7 @@
 require('includes/timers')
 require('includes/utils')
 
-print('#############################################')
-print('\tPlugins Loaded')
-print('Author:\t\t\t\tPalonez')
-print('Version:\t\t\t0.9')
-print('Discord:\t\t\tquake1011')
-print('Github:\t\t\t\tQuake1011')
-print('VK:\t\t\t\tvk.com/bgtroll')
-print('If u`ve an idea im ready to listen it')
-print('#############################################')
+local _VERSION_ = 1.0
 
 local xxx = ""
 
@@ -17,20 +9,12 @@ local Players = {}
 local TotalMapVotes = {}
 local OnlineAdmins = {}
 
-local admins = LoadKeyValues("scripts/configs/admins.ini")
-local kv = LoadKeyValues("scripts/configs/plugins.ini")
-local maplist = LoadKeyValues("scripts/configs/maplist.ini")
+local admins = LoadKeyValues("scripts/configs/admins.ini") ~= nil and LoadKeyValues("scripts/configs/admins.ini") or error("Cant load scripts/configs/admins.ini")
+local kv = LoadKeyValues("scripts/configs/plugins.ini") ~= nil and LoadKeyValues("scripts/configs/plugins.ini") or error("Cant load scripts/configs/plugins.ini")
+local maplist = LoadKeyValues("scripts/configs/maplist.ini") ~= nil and LoadKeyValues("scripts/configs/maplist.ini") or error("Cant load scripts/configs/maplist.ini")
 
-if admins == nil then
-	error("Couldn't load config file scripts/configs/admins.ini")
-end
-
-if maplist ~= nil then
-	for _,v in pairs(maplist["maps"]) do
-		TotalMapVotes[v] = {}
-	end
-else
-	error("Couldn't load config file scripts/configs/maplist.ini")
+for _,v in pairs(maplist["maps"]) do
+	TotalMapVotes[v] = {}
 end
 
 function PlayerVotedAlready(player_handle)
@@ -156,7 +140,7 @@ function IsAdmin(player)
 end
 
 -- login <password>
-Convars:RegisterCommand("login", function (_, password)
+Convars:RegisterCommand("login", function(_, password)
 	if kv["admin_password"] == password then
 		if IsAdmin(Convars:GetCommandClient()) == false then
 			table.insert(OnlineAdmins, Convars:GetCommandClient())
@@ -165,7 +149,7 @@ Convars:RegisterCommand("login", function (_, password)
 end, nil, 0)
 
 -- asay <message>
-Convars:RegisterCommand("asay", function (_, ...)
+Convars:RegisterCommand("asay", function(_, ...)
 	for _,v in ipairs({...}) do
 		xxx = xxx .. " " .. tostring(v)
 	end  
@@ -185,7 +169,7 @@ Convars:RegisterCommand("asay", function (_, ...)
 end, nil, 0)
 
 -- conexec <convar> <newvalue>
-Convars:RegisterCommand("conexec", function (_, varname, value)
+Convars:RegisterCommand("conexec", function(_, varname, value)
 	if IsAdmin(Convars:GetCommandClient()) == true then
 		if varname ~= nil and value ~= nil then
 			SendToServerConsole(varname .. " " .. tostring(value))
@@ -194,7 +178,7 @@ Convars:RegisterCommand("conexec", function (_, varname, value)
 end, nil, 0)
 
 -- setmap <map> <changetime>
-Convars:RegisterCommand("setmap", function (_, map, chtime)
+Convars:RegisterCommand("setmap", function(_, map, chtime)
 	if mapExists(mapname) == true then
 		if IsAdmin(Convars:GetCommandClient()) == true then
 			if map ~= nil then
@@ -233,7 +217,7 @@ Convars:RegisterCommand("setmap", function (_, map, chtime)
 end, nil, 0)
 
 -- _kick <uid> <reason>
-Convars:RegisterCommand("kickit", function (_, userid, reason)
+Convars:RegisterCommand("kickit", function(_, userid, reason)
 	local client = Convars:GetCommandClient()
 	if IsAdmin(client) == true then
 		if userid ~= nil and reason ~= nil then
@@ -260,7 +244,7 @@ Convars:RegisterCommand("kickit", function (_, userid, reason)
 end, nil, 0)
 
 -- hp <uid> <value>
-Convars:RegisterCommand("hp", function (_, userid, value)
+Convars:RegisterCommand("hp", function(_, userid, value)
 	if IsAdmin(Convars:GetCommandClient()) == true then
 		if Players[tonumber(userid)] ~= nil then
 			local target = Players[tonumber(userid)].userid_pawn
@@ -275,7 +259,7 @@ Convars:RegisterCommand("hp", function (_, userid, value)
 end, nil, 0)
 
 -- size <uid> <value>
-Convars:RegisterCommand("size", function (_, userid, value)
+Convars:RegisterCommand("size", function(_, userid, value)
 	if IsAdmin(Convars:GetCommandClient()) == true then
 		if Players[tonumber(userid)] ~= nil then
 			local target = Players[tonumber(userid)].userid_pawn
@@ -290,7 +274,7 @@ Convars:RegisterCommand("size", function (_, userid, value)
 end, nil, 0)
 
 -- clr <uid> <r> <g> <b> <a>
-Convars:RegisterCommand("clr", function (_, userid, r, g, b, a)
+Convars:RegisterCommand("clr", function(_, userid, r, g, b, a)
 	if IsAdmin(Convars:GetCommandClient()) == true then
 		if Players[tonumber(userid)] ~= nil then
 			local target = Players[tonumber(userid)].userid_pawn
@@ -320,7 +304,7 @@ Convars:RegisterCommand("clr", function (_, userid, r, g, b, a)
 end, nil, 0)
 
 -- grav <uid> <value>
-Convars:RegisterCommand("grav", function (_, userid, value)
+Convars:RegisterCommand("grav", function(_, userid, value)
 	if IsAdmin(Convars:GetCommandClient()) == true then
 		if Players[tonumber(userid)] ~= nil then
 			local target = Players[tonumber(userid)].userid_pawn
@@ -335,7 +319,7 @@ Convars:RegisterCommand("grav", function (_, userid, value)
 end, nil, 0)
 
 -- fric <uid> <value>
-Convars:RegisterCommand("fric", function (_, userid, value)
+Convars:RegisterCommand("fric", function(_, userid, value)
 	if IsAdmin(Convars:GetCommandClient()) == true then
 		if Players[tonumber(userid)] ~= nil then
 			local target = Players[tonumber(userid)].userid_pawn
@@ -349,8 +333,11 @@ Convars:RegisterCommand("fric", function (_, userid, value)
 	end
 end, nil, 0)
 
+print("\t\t\t\t\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\n\t\t\t\t\t\x20\x20\x20\x20\x20\x20\x50\x6c\x75\x67\x69\x6e\x73\x20\x4c\x6f\x61\x64\x65\x64\n\t\t\t\t\x41\x75\x74\x68\x6F\x72\x3A\t\t\t\tPalonez\n\t\t\t\t\x41\x75\x74\x68\x6F\x72\x3A\t\t\t\t" .. _VERSION_ .. "\n\t\t\t\t\x44\x69\x73\x63\x6F\x72\x64\x3A\t\t\t\x71\x75\x61\x6B\x65\x31\x30\x31\x31\n\t\t\t\t\x47\x69\x74\x68\x75\x62\x3A\t\t\t\t\x51\x75\x61\x6B\x65\x31\x30\x31\x31\n\t\t\t\t\x56\x4B\x3A\t\t\t\t\x76\x6B\x2E\x63\x6F\x6D\x2F\x62\x67\x74\x72\x6F\x6C\x6C\n\t\t\t\t\x5F\x5F\x5F\x5F\x5F\x5F\x5F\x5F\x5F\x5F\x5F\x5F\x5F\x5F\x5F\x5F\x5F\x5F\x5F\x5F\x5F\x5F\x5F\x5F\x5F\x5F\x5F\x5F\x5F\x5F\x5F\x5F\x5F\x5F\x5F\x5F\x5F\x5F\x5F\x5F\x5F\x5F\x5F\x5F\x5F\n\t\t\t\t\x20\x20\x20\x20\x49\x66\x20\x75\x60\x76\x65\x20\x61\x6E\x20\x69\x64\x65\x61\x20\x69\x6D\x20\x72\x65\x61\x64\x79\x20\x74\x6F\x20\x6C\x69\x73\x74\x65\x6E\x20\x69\x74\n\t\t\t\t\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23")
+
+
 -- disarm <uid> <weapon_classname>
-Convars:RegisterCommand("disarm", function (_, userid, weapon)
+Convars:RegisterCommand("disarm", function(_, userid, weapon)
 	if IsAdmin(Convars:GetCommandClient()) == true then
 		if Players[tonumber(userid)] ~= nil then
 			local target = Players[tonumber(userid)].userid_pawn
@@ -370,7 +357,7 @@ Convars:RegisterCommand("disarm", function (_, userid, weapon)
 end, nil, 0) 
 
 -- changeteam <uid> <team>
-Convars:RegisterCommand("changeteam", function (_, userid, team)
+Convars:RegisterCommand("changeteam", function(_, userid, team)
 	if IsAdmin(Convars:GetCommandClient()) == true then
 		if Players[tonumber(userid)] ~= nil then
 			local target = Players[tonumber(userid)].userid_pawn
@@ -393,7 +380,7 @@ Convars:RegisterCommand("changeteam", function (_, userid, team)
 end, nil, 0) 
 
 -- killit <uid>
-Convars:RegisterCommand("killit", function (_, userid)
+Convars:RegisterCommand("killit", function(_, userid)
 	if IsAdmin(Convars:GetCommandClient()) == true then
 		if Players[tonumber(userid)] ~= nil then
 			local target = Players[tonumber(userid)].userid_pawn
@@ -406,7 +393,7 @@ Convars:RegisterCommand("killit", function (_, userid)
 end, nil, 0) 
 
 -- hudstatus <uid> <status>
-Convars:RegisterCommand("hudstatus", function (_, userid, status)
+Convars:RegisterCommand("hudstatus", function(_, userid, status)
 	if IsAdmin(Convars:GetCommandClient()) == true then
 		if Players[tonumber(userid)] ~= nil then
 			local target = Players[tonumber(userid)].userid_pawn
@@ -418,7 +405,7 @@ Convars:RegisterCommand("hudstatus", function (_, userid, status)
 end, nil, 0) 
 
 -- suicide
-Convars:RegisterCommand("suicide", function ()
+Convars:RegisterCommand("suicide", function()
 	Convars:GetCommandClient():TakeDamage(CreateDamageInfo(Convars:GetCommandClient(), Convars:GetCommandClient(), Vector(0.0, 0.0, 0.0), Vector(0.0, 0.0, 0.0), 1337, 4))
 	Convars:GetCommandClient():TakeDamage(CreateDamageInfo(Convars:GetCommandClient(), Convars:GetCommandClient(), Vector(0.0, 0.0, 0.0), Vector(0.0, 0.0, 0.0), 1337, 4))
 end, nil, 0) 
@@ -433,7 +420,7 @@ function mapExists(map)
 end
 
 -- votemap <mapname>
-Convars:RegisterCommand("votemap", function (_, mapname)
+Convars:RegisterCommand("votemap", function(_, mapname)
 	if mapExists(mapname) == true then
 		if mapname ~= nil then
 			local player = Convars:GetCommandClient()

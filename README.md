@@ -2,7 +2,7 @@
 
 **IMPORTANT: Only for folder OTHER: Since when the map is changed, the player_connect event is not executed, in which all important data is transmitted, because of this, after changing the map, some functions will not work for those players who were at the time of changing the map to the server until they are do reconnect**
 
-Includes 10 mini lua plugins for CS2
+Includes 12 mini lua plugins for CS2
 
 - Mini-admin
 - Voting for map
@@ -14,6 +14,8 @@ Includes 10 mini lua plugins for CS2
 - Round end/start announcer
 - Bomb explode announcer
 - Most destructive
+- Plant blocker
+- Weapon deleter(aka low leveled `weapon restrict`)
 
 https://github.com/Quake1011/CS2-plugins-lua/assets/58555031/50b5fdc8-c219-4b69-9a0d-c0cf7e02ea92
 ![image](https://github.com/Quake1011/CS2-plugins-lua/assets/58555031/7a1a3172-cbd2-46dd-8b57-a84f0e47f457)
@@ -88,8 +90,7 @@ For all:
 - **suicide** - kill yourself
 
 ## Credits
-- https://github.com/deaFPS
-- https://vk.com/prodby4realraze (testing)
+Thanks to all those who supported me and my work in any way
 
 ## About possible problems, please let me know: 
 [<img src="https://i.ibb.co/LJz83MH/a681b18dd681f38e599286a07a92225d.png" width="15.3%"/>](https://discordapp.com/users/858709381088935976/)
