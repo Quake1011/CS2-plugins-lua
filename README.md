@@ -15,7 +15,10 @@ Includes 12 mini lua plugins for CS2
 - Bomb explode announcer
 - Most destructive
 - Plant blocker
-- Weapon deleter(aka low-leveled `weapon restrictor`)(WARNING: NOT REFUND MONEY FOR WEAPON)
+- Weapon deleter(aka low-leveled `weapon restrictor`)
+```diff
+- WARNING: WEAPON DELETER NOT REFUND MONEY FOR WEAPON)
+```
 
 ## Preview
 <details> 
