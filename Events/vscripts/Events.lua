@@ -55,7 +55,11 @@ function RoundEnd(event)
 		end
 	end
 	
-	if c4t then	
+	if c4t ~= nil then	
+		Timers:RemoveTimer(c4t)
+	end
+	
+	if c4t ~= nil then	
 		Timers:RemoveTimer(c4t)
 	end
 end
@@ -69,10 +73,6 @@ function RoundStart(event)
 		if kv["round_start_message"].Center ~= nil then
 			PrintToAll(kv["round_start_message"].Center, "center")
 		end
-	end
-	
-	if c4t then	
-		Timers:RemoveTimer(c4t)
 	end
 end
 
