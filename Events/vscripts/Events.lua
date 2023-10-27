@@ -5,8 +5,6 @@ local _VERSION_ = 1.0
 
 local kv = LoadKeyValues("scripts/configs/Events.ini") ~= nil and LoadKeyValues("scripts/configs/Events.ini") or error("Cant load scripts/configs/Events.ini")
 
-c4t = nil
-
 function PlayerDisconnect(event)
 	if kv["bot_disconnect_announce"] == 0 and event["networkid"] == "BOT" then
 		return
