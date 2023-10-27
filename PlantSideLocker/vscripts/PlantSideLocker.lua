@@ -43,7 +43,7 @@ function RoundStart(event)
 					end
 				end
 			else
-				ScriptPrintMessageCenterAll("NO ONE PLANT WILL BLOCKED")
+				ScriptPrintMessageCenterAll("YOU CAN PLAY BOTH SITES NOW")
 			end
 		end	
 	end
