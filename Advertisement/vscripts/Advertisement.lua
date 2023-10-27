@@ -41,7 +41,7 @@ function ReplaceUsefull(str)
 	str = string.gsub(str, "{TIME}", h .. ":" .. m .. ":" .. s)
 	
 	if kv["discord_invite_link"] ~= nil then
-		str = string.gsub(str, "{DISCORD}", "https://discord.gg/" .. discord)
+		str = string.gsub(str, "{DISCORD}", "discord.gg/" .. discord)
 	end
 	
 	if kv["vk_link"] ~= nil then
