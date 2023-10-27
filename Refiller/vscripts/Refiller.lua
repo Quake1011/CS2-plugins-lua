@@ -3,6 +3,10 @@ local _VERSION_ = 1.0
 local kv = LoadKeyValues("scripts/configs/Refiller.ini") ~= nil and LoadKeyValues("scripts/configs/Refiller.ini") or error("Cant load scripts/configs/Refiller.ini")
 local weapons_ammo = LoadKeyValues("scripts/configs/weapons.ini") ~= nil and LoadKeyValues("scripts/configs/weapons.ini") or error("Cant load scripts/configs/weapons.ini")
 
+if pldev then
+	StopListeningToGameEvent(pldev)
+end
+
 function PlayerDeath(event)
 	if event["attacker"] ~= nil and event["userid"] ~= nil then
 		local player = EntIndexToHScript(bit.band(event["attacker_pawn"], 0x3FFF))
@@ -79,4 +83,4 @@ function SetWeaponAmmo(instance, class)
 	end
 end
 
-ListenToGameEvent("player_death", PlayerDeath, nil)
+pldev = ListenToGameEvent("player_death", PlayerDeath, nil)

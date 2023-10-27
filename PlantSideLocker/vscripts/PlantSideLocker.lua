@@ -6,6 +6,12 @@ local _VERSION_ = 1.0
 
 local okBlock = false
 
+if EventsListPSL then
+	for k,v in pairs(EventsListPSL) do
+		StopListeningToGameEvent(v)
+	end
+end
+
 function RoundEnd(event)
 	if okBlock == true then
 		okBlock = false
@@ -20,7 +26,7 @@ function RoundStart(event)
 		if cfg[map] then
 			if isRestricted(map) == true then
 				local restrictedPlant = cfg[map]["available_plant"]
-				if restrictedPlant ~= "random" then
+				if restrictedPlant == "RANDOM" then
 					restrictedPlant = plants[math.random(1,2)]
 				end
 				for k,v in pairs(plants) do
@@ -69,5 +75,8 @@ function GetCountPlayersInTeam(team)
 	end
 	return counter
 end
-ListenToGameEvent("round_end", RoundEnd, nil)
-ListenToGameEvent("round_start", RoundStart, nil)
+
+EventsListPSL = {
+	ListenToGameEvent("round_end", RoundEnd, nil)
+	ListenToGameEvent("round_start", RoundStart, nil)
+}

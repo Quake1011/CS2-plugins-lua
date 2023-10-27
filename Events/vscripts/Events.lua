@@ -5,6 +5,12 @@ local _VERSION_ = 1.0
 
 local kv = LoadKeyValues("scripts/configs/Events.ini") ~= nil and LoadKeyValues("scripts/configs/Events.ini") or error("Cant load scripts/configs/Events.ini")
 
+if GLEv then
+	for k,v in pairs(GLEv) do
+		StopListeningToGameEvent(v)
+	end
+end
+
 function PlayerDisconnect(event)
 	if kv["bot_disconnect_announce"] == 0 and event["networkid"] == "BOT" then
 		return
@@ -105,8 +111,10 @@ function BombPlanted(event)
 	end
 end
 
-ListenToGameEvent("player_connect", PlayerConnect, nil)
-ListenToGameEvent("player_disconnect", PlayerDisconnect, nil)
-ListenToGameEvent("round_start", RoundStart, nil)
-ListenToGameEvent("round_end", RoundEnd, nil)
-ListenToGameEvent("bomb_planted", BombPlanted, nil)
+GLEv = {
+	ListenToGameEvent("player_connect", PlayerConnect, nil)
+	ListenToGameEvent("player_disconnect", PlayerDisconnect, nil)
+	ListenToGameEvent("round_start", RoundStart, nil)
+	ListenToGameEvent("round_end", RoundEnd, nil)
+	ListenToGameEvent("bomb_planted", BombPlanted, nil)\
+}

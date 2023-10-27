@@ -2,6 +2,12 @@ local PlayersDamageDelt = {}
 
 local _VERSION_ = 1.0
 
+if EvMD then
+	for k,v in pairs(EvMD) do
+		StopListeningToGameEvent(v)
+	end
+end
+
 function playerHurt(event)
 	attacker = EntIndexToHScript(bit.band(event.attacker_pawn, 0x3FFF))
 	if attacker ~= nil then
@@ -63,6 +69,8 @@ function ExistsKeyInTable(key)
 	return false
 end
 
-ListenToGameEvent("round_end", roundEnd, nil)
-ListenToGameEvent("round_start", roundStart, nil)
-ListenToGameEvent("player_hurt", playerHurt, nil)
+EvMD = {
+	ListenToGameEvent("round_end", roundEnd, nil)
+	ListenToGameEvent("round_start", roundStart, nil)
+	ListenToGameEvent("player_hurt", playerHurt, nil)
+}

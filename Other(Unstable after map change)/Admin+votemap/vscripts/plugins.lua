@@ -9,6 +9,12 @@ local Players = {}
 local TotalMapVotes = {}
 local OnlineAdmins = {}
 
+if EVplg then
+	for k,v in pairs(EVplg) do
+		StopListeningToGameEvent(v)
+	end
+end
+
 local admins = LoadKeyValues("scripts/configs/admins.ini") ~= nil and LoadKeyValues("scripts/configs/admins.ini") or error("Cant load scripts/configs/admins.ini")
 local kv = LoadKeyValues("scripts/configs/plugins.ini") ~= nil and LoadKeyValues("scripts/configs/plugins.ini") or error("Cant load scripts/configs/plugins.ini")
 local maplist = LoadKeyValues("scripts/configs/maplist.ini") ~= nil and LoadKeyValues("scripts/configs/maplist.ini") or error("Cant load scripts/configs/maplist.ini")
@@ -484,10 +490,12 @@ Convars:RegisterCommand("votemap", function(_, mapname)
 	end
 end, nil, 0)
 
-ListenToGameEvent("player_connect", PlayerConnect, nil)
-ListenToGameEvent("player_disconnect", PlayerDisconnect, nil)
-ListenToGameEvent("player_death", PlayerDeath, nil)
-ListenToGameEvent("round_start", RoundStart, nil)
-ListenToGameEvent("player_team", PlayerTeam, nil)
-ListenToGameEvent("player_spawn", PlayerSpawn, nil)
-ListenToGameEvent("player_info", PlayerInfo, nil)
+EVplg = {
+	ListenToGameEvent("player_connect", PlayerConnect, nil)
+	ListenToGameEvent("player_disconnect", PlayerDisconnect, nil)
+	ListenToGameEvent("player_death", PlayerDeath, nil)
+	ListenToGameEvent("round_start", RoundStart, nil)
+	ListenToGameEvent("player_team", PlayerTeam, nil)
+	ListenToGameEvent("player_spawn", PlayerSpawn, nil)
+	ListenToGameEvent("player_info", PlayerInfo, nil)
+}

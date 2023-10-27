@@ -10,6 +10,12 @@ local teams = {
 	["3"] = "ct"
 }
 
+if EventsListWD then
+	for k,v in pairs(EventsListWD) do
+		StopListeningToGameEvent(v)
+	end
+end
+
 local okPrint = false
 
 local players = {}
@@ -74,11 +80,13 @@ function Pickup(event)
     end
 end
 
-ListenToGameEvent("item_purchase", Purchase, nil)
-ListenToGameEvent("item_pickup", Pickup, nil)
-ListenToGameEvent("player_spawn", Spawn, nil)
-ListenToGameEvent("round_start", Start, nil)
-ListenToGameEvent("round_end", End, nil)
+EventsListWD = {
+	ListenToGameEvent("item_purchase", Purchase, nil)
+	ListenToGameEvent("item_pickup", Pickup, nil)
+	ListenToGameEvent("player_spawn", Spawn, nil)
+	ListenToGameEvent("round_start", Start, nil)
+	ListenToGameEvent("round_end", End, nil)
+}
 
 function EntSetPulse(player, weapon)
 	weapon:ApplyAbsVelocityImpulse(-((player:GetCenter() - weapon:GetOrigin()):Normalized() * 800))
