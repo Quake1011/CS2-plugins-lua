@@ -30,7 +30,7 @@ function Start(event)
 	if okPrint == false then
 		okPrint = true
 		if cfg["message_status"] == 1 then
-			PrintToAll(ReplaceTags("{ORANGE}< === [ {WHITE}Restricted weapons {ORANGE}] === > {WHITE}{NL}" .. RestrictedArrayLikeString(weap_array)), "chat")
+			PrintToAll(ReplaceTags("{ORANGE}< === [ {WHITE}Restricted weapons {ORANGE}] === > {WHITE}{NL}" .. RestrictedArrayLikeString(cfg)), "chat")
 		end
 	end
 end
