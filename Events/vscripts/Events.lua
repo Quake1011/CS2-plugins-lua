@@ -112,9 +112,9 @@ function BombPlanted(event)
 end
 
 GLEv = {
-	ListenToGameEvent("player_connect", PlayerConnect, nil)
-	ListenToGameEvent("player_disconnect", PlayerDisconnect, nil)
-	ListenToGameEvent("round_start", RoundStart, nil)
-	ListenToGameEvent("round_end", RoundEnd, nil)
-	ListenToGameEvent("bomb_planted", BombPlanted, nil)\
+	ListenToGameEvent("player_connect", PlayerConnect, nil),
+	ListenToGameEvent("player_disconnect", PlayerDisconnect, nil),
+	ListenToGameEvent("round_start", RoundStart, nil),
+	ListenToGameEvent("round_end", RoundEnd, nil),
+	ListenToGameEvent("bomb_planted", BombPlanted, nil)
 }

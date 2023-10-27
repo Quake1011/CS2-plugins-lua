@@ -81,10 +81,10 @@ function Pickup(event)
 end
 
 EventsListWD = {
-	ListenToGameEvent("item_purchase", Purchase, nil)
-	ListenToGameEvent("item_pickup", Pickup, nil)
-	ListenToGameEvent("player_spawn", Spawn, nil)
-	ListenToGameEvent("round_start", Start, nil)
+	ListenToGameEvent("item_purchase", Purchase, nil),
+	ListenToGameEvent("item_pickup", Pickup, nil),
+	ListenToGameEvent("player_spawn", Spawn, nil),
+	ListenToGameEvent("round_start", Start, nil),
 	ListenToGameEvent("round_end", End, nil)
 }
 

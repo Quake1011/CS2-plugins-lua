@@ -77,6 +77,6 @@ function GetCountPlayersInTeam(team)
 end
 
 EventsListPSL = {
-	ListenToGameEvent("round_end", RoundEnd, nil)
+	ListenToGameEvent("round_end", RoundEnd, nil),
 	ListenToGameEvent("round_start", RoundStart, nil)
 }

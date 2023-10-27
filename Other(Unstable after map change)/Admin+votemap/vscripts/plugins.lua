@@ -491,11 +491,11 @@ Convars:RegisterCommand("votemap", function(_, mapname)
 end, nil, 0)
 
 EVplg = {
-	ListenToGameEvent("player_connect", PlayerConnect, nil)
-	ListenToGameEvent("player_disconnect", PlayerDisconnect, nil)
-	ListenToGameEvent("player_death", PlayerDeath, nil)
-	ListenToGameEvent("round_start", RoundStart, nil)
-	ListenToGameEvent("player_team", PlayerTeam, nil)
-	ListenToGameEvent("player_spawn", PlayerSpawn, nil)
+	ListenToGameEvent("player_connect", PlayerConnect, nil),
+	ListenToGameEvent("player_disconnect", PlayerDisconnect, nil),
+	ListenToGameEvent("player_death", PlayerDeath, nil),
+	ListenToGameEvent("round_start", RoundStart, nil),
+	ListenToGameEvent("player_team", PlayerTeam, nil),
+	ListenToGameEvent("player_spawn", PlayerSpawn, nil),
 	ListenToGameEvent("player_info", PlayerInfo, nil)
 }

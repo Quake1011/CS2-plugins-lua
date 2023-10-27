@@ -70,7 +70,7 @@ function ExistsKeyInTable(key)
 end
 
 EvMD = {
-	ListenToGameEvent("round_end", roundEnd, nil)
-	ListenToGameEvent("round_start", roundStart, nil)
+	ListenToGameEvent("round_end", roundEnd, nil),
+	ListenToGameEvent("round_start", roundStart, nil),
 	ListenToGameEvent("player_hurt", playerHurt, nil)
 }
