@@ -28,7 +28,12 @@ function roundEnd(event)
 		end
 		local tempTable = PlayersDamageDelt
 		table.sort(tempTable, compare)
-		ScriptPrintMessageChatAll( "\x02 Most destructive player " .. tempTable[1].key .. " with damage: " .. tempTable[1] .. "hp")
+		local abc
+		for k,v in pairs(tempTable) do
+			abc = k
+			break
+		end
+		ScriptPrintMessageChatAll( "\x02 Most destructive player " .. abc .. " with damage: " .. tempTable[abc] .. "hp")
 		
 		PlayersDamageDelt = nil
 	end
