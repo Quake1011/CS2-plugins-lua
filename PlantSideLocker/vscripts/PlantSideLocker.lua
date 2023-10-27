@@ -8,7 +8,7 @@ local okBlock = false
 
 function RoundEnd(event)
 	if okBlock == true then
-		okBlock == false
+		okBlock = false
 	end
 end
 
