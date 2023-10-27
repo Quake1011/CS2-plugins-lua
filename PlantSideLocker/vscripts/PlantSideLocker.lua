@@ -25,7 +25,7 @@ function RoundStart(event)
 		local map = GetMapName()
 		if cfg[map] then
 			if isRestricted(map) == true then
-				local restrictedPlant = cfg[map]["available_plant"]
+				local restrictedPlant = cfg[map]["blocked_plant"]
 				if restrictedPlant == "RANDOM" then
 					restrictedPlant = plants[math.random(1,2)]
 				end

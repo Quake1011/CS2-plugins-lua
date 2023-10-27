@@ -95,8 +95,6 @@ function loadCFG()
 			totalAds = totalAds + 1
 		end
 		
-		print("plugins.ini loaded")
-		
 		if totalAds == 0 then
 			return false
 		end
