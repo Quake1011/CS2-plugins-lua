@@ -10,7 +10,15 @@ local teams = {
 	["3"] = "ct"
 }
 
+local okPrint = false
+
 local players = {}
+
+function End(event)
+	if okPrint == true then
+		okPrint = false
+	end
+end
 
 function Start(event)
 	cmd = Entities:FindByClassname(nil, "point_clientcommand")
@@ -19,23 +27,23 @@ function Start(event)
         cmd = SpawnEntityFromTableSynchronous("point_clientcommand", { targetname = "vscript_clientcommand" })
     end
 	
-	local weap_array = cfg
-	weap_array["message_status"] = nil
-	weap_array["sound_status"] = nil
-	weap_array["sound_path"] = nil
-	
-	if cfg["message_status"] == 1 then
-		PrintToAll(ReplaceTags("{ORANGE}< === [ {WHITE}Restricted weapons {ORANGE}] === > {WHITE}{NL}" .. RestrictedArrayLikeString(weap_array)), "chat")
+	if okPrint == false then
+		okPrint = true
+		if cfg["message_status"] == 1 then
+			PrintToAll(ReplaceTags("{ORANGE}< === [ {WHITE}Restricted weapons {ORANGE}] === > {WHITE}{NL}" .. RestrictedArrayLikeString(weap_array)), "chat")
+		end
 	end
 end
 
 function RestrictedArrayLikeString(restricted_array)
 	local outstr = ""
 	for k,v in pairs(restricted_array) do
-		local mb = k
-		mb = string.sub(mb, 8)
-		local sep = outstr ~= "" and "{NL}" or ""
-		outstr = outstr .. sep .. "{DARKGREEN}" .. mb .. ": {RED}T - " .. cfg[k][teams["2"]] .. " {WHITE}| {BLUE}CT - " .. cfg[k][teams["3"]]
+		if string.match(k, "weapon_") ~= nil then
+			local mb = k
+			mb = string.sub(mb, 8)
+			local sep = outstr ~= "" and "{NL}" or ""
+			outstr = outstr .. sep .. "{DARKGREEN}" .. mb .. ": {RED}T - " .. cfg[k][teams["2"]] .. " {WHITE}| {BLUE}CT - " .. cfg[k][teams["3"]]
+		end
 	end
 	return outstr
 end
@@ -70,6 +78,7 @@ ListenToGameEvent("item_purchase", Purchase, nil)
 ListenToGameEvent("item_pickup", Pickup, nil)
 ListenToGameEvent("player_spawn", Spawn, nil)
 ListenToGameEvent("round_start", Start, nil)
+ListenToGameEvent("round_end", End, nil)
 
 function EntSetPulse(player, weapon)
 	weapon:ApplyAbsVelocityImpulse(-((player:GetCenter() - weapon:GetOrigin()):Normalized() * 800))
