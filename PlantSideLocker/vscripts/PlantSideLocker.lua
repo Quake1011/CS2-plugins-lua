@@ -4,31 +4,42 @@ local cfg = LoadKeyValues("scripts/configs/PlantSideLocker.ini") ~= nil and Load
 
 local _VERSION_ = 1.0
 
+local okBlock = false
+
+function RoundEnd(event)
+	if okBlock == true then
+		okBlock == false
+	end
+end
+
 function RoundStart(event)
-	unRestrictAllPlants()
-	local plants = {"A", "B"}
-	local map = GetMapName()
-	if cfg[map] then
-		if isRestricted(map) == true then
-			local restrictedPlant = cfg[map]["available_plant"]
-			if restrictedPlant ~= "random" then
-				restrictedPlant = plants[math.random(1,2)]
-			end
-			for k,v in pairs(plants) do
-				if v == restrictedPlant then
-					DoEntFireByInstanceHandle(Entities:FindAllByClassname("func_bomb_target")[tonumber(k)], "Disable", "", 0.01, nil, nil)
-					if cfg["message_status"] == 1 then
-						local mesoj = cfg["round_start_chat_message"]
-						mesoj = string.gsub(mesoj, "{side}", restrictedPlant)
-						for i = 1, tonumber(cfg["message_repeat"]) do
-							ScriptPrintMessageChatAll(ReplaceTags(mesoj))
+	if okBlock == false then
+		unRestrictAllPlants()
+		local plants = {"A", "B"}
+		local map = GetMapName()
+		if cfg[map] then
+			if isRestricted(map) == true then
+				local restrictedPlant = cfg[map]["available_plant"]
+				if restrictedPlant ~= "random" then
+					restrictedPlant = plants[math.random(1,2)]
+				end
+				for k,v in pairs(plants) do
+					if v == restrictedPlant then
+						DoEntFireByInstanceHandle(Entities:FindAllByClassname("func_bomb_target")[tonumber(k)], "Disable", "", 0.01, nil, nil)
+						okBlock = true
+						if cfg["message_status"] == 1 then
+							local mesoj = cfg["round_start_chat_message"]
+							mesoj = string.gsub(mesoj, "{side}", restrictedPlant)
+							for i = 1, tonumber(cfg["message_repeat"]) do
+								ScriptPrintMessageChatAll(ReplaceTags(mesoj))
+							end
 						end
 					end
 				end
+			else
+				ScriptPrintMessageCenterAll("NO ONE PLANT WILL BLOCKED")
 			end
-		else
-			ScriptPrintMessageCenterAll("NO ONE PLANT WILL BLOCKED")
-		end
+		end	
 	end
 end
 
@@ -58,5 +69,5 @@ function GetCountPlayersInTeam(team)
 	end
 	return counter
 end
-
+ListenToGameEvent("round_end", RoundEnd, nil)
 ListenToGameEvent("round_start", RoundStart, nil)
