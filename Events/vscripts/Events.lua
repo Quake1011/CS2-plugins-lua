@@ -97,7 +97,7 @@ function BombPlanted(event)
 			end
 			
 			if bombBackCounter == 20 or bombBackCounter == 10 then
-				PrintToAll("before the explosion is left: " .. bombBackCounter .. " seconds", "center")
+				PrintToAll("Explosion in: " .. bombBackCounter .. " seconds", "center")
 			end
 			
 			if bombBackCounter <= 5 then
