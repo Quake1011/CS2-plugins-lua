@@ -1,9 +1,10 @@
-# CS2-plugins-lua
+# 										CS2-plugins-lua
 
 **IMPORTANT: Only for folder OTHER: Since when the map is changed, the player_connect event is not executed, in which all important data is transmitted, because of this, after changing the map, some functions will not work for those players who were at the time of changing the map to the server until they are do reconnect**
 
-Includes 12 mini lua plugins for CS2
+## Includes 13 lua plugins for CS2
 
+- Blocker Passes
 - Mini-admin
 - Voting for map
 - Ammo and health refill after kill
@@ -66,25 +67,6 @@ Includes 12 mini lua plugins for CS2
 > 
 > https://github.com/Quake1011/CS2-plugins-lua/assets/58555031/50b5fdc8-c219-4b69-9a0d-c0cf7e02ea92
 
-## Install
-1) Place contains of folder(s) in **game\csgo\scripts**. If **scripts** folder not exist then you should to make it
-2) Add to **gamemode_your_gamemode_name.cfg** next lines:
-> You can load all script or 1 one them if u want
-```
-sv_cheats 1
-script_reload_code your_script_name.lua
-sv_cheats 0
-```
-
-```
-sv_cheats 1
-script_reload_code your_script_name.lua
-script_reload_code your_script_name.lua
-script_reload_code your_script_name.lua
-sv_cheats 0
-```
-3) Reload the server
-
 ## Requirements
 ### Patching
 - manual patching vscript.dll:
@@ -107,6 +89,42 @@ You can use one of automation methods below:
 - [method-3](https://github.com/bklol/vscriptPatch/tree/main)(Python script patcher)
 - [method-4](https://hlmod.net/threads/source-2-skripting.64842/page-6#post-631991)(File replace. Unverified)
 
+## Install
+1) Place contains of folder(s) in **game\csgo\scripts**. If **scripts** folder not exist then you should to make it
+2) Add to **gamemode_your_gamemode_name.cfg** next lines:
+> You can load all script or 1 one them if u want
+```
+sv_cheats 1
+script_reload_code your_script_name.lua
+sv_cheats 0
+```
+
+```
+sv_cheats 1
+script_reload_code your_script_name.lua
+script_reload_code your_script_name.lua
+script_reload_code your_script_name.lua
+sv_cheats 0
+```
+3) Reload the server
+
+## Blocker Passes commands
+- **BPEditor \<secret_key\>** - enable/disable EDITOR mode
+	- `@secret_key` - the string required to confirm switching to EDITOR mode
+- **BPReload <secret_key>** - reload BlockerPasses.ini config file. Required \"secret_key\" for this action
+	- `@secret_key` - the string required to confirm file reloading
+- **BPGen** - generates a template from the added entities on the map in EDITOR mode to console formatted already
+- **BPDel \<argument\>** - deletes the selected entities.
+	- `@argument`:
+		- `last` - delete last created entity
+		- `all` - delete all created entity
+		- `MyNam62eOfEni4tity` - delete entities named as for example: **MyNam62eOfEni4tity**
+
+- **BPTables** - outputs a table of values of current entities to the console
+- **BPSpawn** - сreates an entity in front of the player who creates it
+- **BPColor \<r\> \<g\> \<b\> \<a\>** - sets the color for the entities that will be created after that
+- **BPModel \<path_to_vmld>\** - sets the model for the entities that will be created after that
+	
 ## Commands(Other)
 For admin:
 - **kickit \<uid\> <reason>** - kick player from server
@@ -118,7 +136,7 @@ For admin:
 - **clr \<uid\> \<r\> \<g\> \<b\> \<a\>** - set color and transparency to the player (all RGBA numbers within 0 - 255)
 - **grav \<uid\> \<value\>** - set gravity to the player (any decimal positive number, for example 0.5 or 49.0)
 - **fric \<uid\> \<value\>** - to set the grip on the surface of the player (any decimal positive number, for example 0.5 or 49.0)
-- **disarm \<uid\>** \<weapon_classname\> - remove the player's weapon, for example, weapon_ak47. Delete all weapons - instead of <weapon_classname> write - @all
+- **disarm \<uid\> \<weapon_classname\>** - remove the player's weapon, for example, weapon_ak47. Delete all weapons - instead of <weapon_classname> write - @all
 - **killit \<uid\>** - kill the player
 - **changeteam \<uid\> \<team\>** - change the player's team (team number or short name. For example ct or 3)
 - **hudstatus \<uid\> \<status\>** - turn off or turn off the hood to the player (0 or 1)

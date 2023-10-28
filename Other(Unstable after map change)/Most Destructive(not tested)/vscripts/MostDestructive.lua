@@ -2,6 +2,8 @@ local PlayersDamageDelt = {}
 
 local _VERSION_ = 1.0
 
+local CanReset = false
+
 if EvMD then
 	for k,v in pairs(EvMD) do
 		StopListeningToGameEvent(v)
@@ -20,28 +22,34 @@ function playerHurt(event)
 end
 
 function roundStart(event)
-	if PlayersDamageDelt then 
-		PlayersDamageDelt = nil
+	if CanReset == false then
+		if PlayersDamageDelt then 
+			PlayersDamageDelt = nil
+		end
+		CanReset = true
 	end
 end
 
 function roundEnd(event)
-	if PlayersDamageDelt then 
-		for k,v in pairs(PlayersDamageDelt) do
-			if IsPlayerOnline(k) == false then
-				PlayersDamageDelt[k] = nil
-			end			
+	if CanReset == true then
+		if PlayersDamageDelt then 
+			for k,v in pairs(PlayersDamageDelt) do
+				if IsPlayerOnline(k) == false then
+					PlayersDamageDelt[k] = nil
+				end			
+			end
+			local tempTable = PlayersDamageDelt
+			table.sort(tempTable, compare)
+			local abc
+			for k,v in pairs(tempTable) do
+				abc = k
+				break
+			end
+			ScriptPrintMessageChatAll( "\x02 Most destructive player " .. abc .. " with damage: " .. tempTable[abc] .. "hp")
+			
+			PlayersDamageDelt = nil
 		end
-		local tempTable = PlayersDamageDelt
-		table.sort(tempTable, compare)
-		local abc
-		for k,v in pairs(tempTable) do
-			abc = k
-			break
-		end
-		ScriptPrintMessageChatAll( "\x02 Most destructive player " .. abc .. " with damage: " .. tempTable[abc] .. "hp")
-		
-		PlayersDamageDelt = nil
+		CanReset = false
 	end
 end
 
