@@ -123,7 +123,7 @@ sv_cheats 0
 - **BPTables** - outputs a table of values of current entities to the console
 - **BPSpawn** - сreates an entity in front of the player who creates it
 - **BPColor \<r\> \<g\> \<b\> \<a\>** - sets the color for the entities that will be created after that
-- **BPModel \<path_to_vmld>\** - sets the model for the entities that will be created after that
+- **BPModel \<path_to_vmld>** - sets the model for the entities that will be created after that
 	
 ## Commands(Other)
 For admin:
