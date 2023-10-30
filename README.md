@@ -25,13 +25,15 @@
 ## Preview
 <details> 
 	<summary>Blocker passes</summary>
-	<img src="">
+	<img src="https://github.com/Quake1011/CS2-plugins-lua/assets/58555031/998b8539-fe2e-4999-bf42-52f0b420606b">
+	
 	The plugin allows you to block some certain passages by adding your own items
 </details>
 <details> 
 	<summary>Spawn point manager</summary>
-	<img src="">
-	
+	<img src="https://github.com/Quake1011/CS2-plugins-lua/assets/58555031/bb3c541b-860f-4cdc-ba32-d1b4549e8e97">
+	<img src="https://github.com/Quake1011/CS2-plugins-lua/assets/58555031/2caa187b-674c-449f-b921-bc954ba24fad">
+
 	The plugin allows you to add spawn points up to 64
 </details>
 <details> 
