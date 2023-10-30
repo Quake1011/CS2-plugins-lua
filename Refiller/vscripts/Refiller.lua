@@ -28,8 +28,9 @@ function PlayerDeath(event)
 						for k, eqWeapon in pairs(player:GetEquippedWeapons()) do
 							local weaponName = eqWeapon:GetClassname()
 							weaponName = string.sub(weaponName, 8)
+							print(weaponName, event["weapon"])
 							if kv["all_equiped_weapon"] == 0 then
-								if (weaponName == event["weapon"] or (event["weapon"] == "m4a1_silencer" and weaponName == "m4a1")) or (weaponName == event["weapon"] or (event["weapon"] == "usp_silencer" and weaponName == "hkp2000")) then
+								if weaponName == event["weapon"] or ((event["weapon"] == "m4a1_silencer" and weaponName == "m4a1") or (event["weapon"] == "usp_silencer" and weaponName == "hkp2000") or (event["weapon"] == "mp5sd" and weaponName == "mp7")) then
 									SetWeaponAmmo(eqWeapon, event["weapon"])
 									break
 								end
