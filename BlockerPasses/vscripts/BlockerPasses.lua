@@ -271,16 +271,24 @@ end
 Convars:RegisterCommand("BPGen", function()
 	if EditorStatus == true then
 		local ctr = 1
+		print("\"".. GetMapName() .. "\"")
+		print("{")
 		for k,v in pairs(EditorEnts) do
-			print("\"" .. ctr .. "\"	// any blockname\
-{\
-\x20\x20\x20\x20\"model\"\x20\x20\x20\x20\"" .. v["model"] .. "\"\x20\x20\x20\x20 // path to model \
-\x20\x20\x20\x20\"color\"\x20\x20\x20\x20\"" .. v["color"][1] .. " " .. v["color"][2] .. " " .. v["color"][3] .. " " .. v["color"][4] .. "\"\x20\x20\x20\x20 // color of spawned model \
-\x20\x20\x20\x20\"angles\"\x20\x20\x20\x20\"" .. vecToString(v["angles"]) .. "\"\x20\x20\x20\x20 // angel direction of spawned model \
-\x20\x20\x20\x20\"origin\"\x20\x20\x20\x20\"" .. vecToString(v["origin"]) .. "\"\x20\x20\x20\x20 // origin coords of spawned model \
-}")
+			print("\"Message\"             	\"Some passes will {RED}blocked!\" 	// message which prints on round start event")
+			print("\"PlayerNum\"			\"10\"	// required number of players for unlock passes")
+			print("\"Entities\"")
+			print("{")		
+				print("\"" .. ctr .. "\"	// any blockname")
+				print("{")
+					print("\"model\"\"" .. v["model"] .. "\" // path to model")
+					print("\"color\"\"" .. v["color"][1] .. " " .. v["color"][2] .. " " .. v["color"][3] .. " " .. v["color"][4] .. "\" // color of spawned model")
+					print("\"angles\"\"" .. vecToString(v["angles"]) .. "\" // angel direction of spawned model")
+					print("\"origin\"\"" .. vecToString(v["origin"]) .. "\" // origin coords of spawned model")
+				print("}")
+			print("}")
 			ctr = ctr + 1
 		end
+		print("}")
 	end
 end, nil, 0)
 
