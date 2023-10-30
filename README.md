@@ -160,6 +160,11 @@ sv_cheats 0
 - **BPModel \<path_to_vmdl\>** - sets the model for the entities that will be created after that
 
 ## Spawn point manager commands
+```diff
++ To unlock the player limit, add this to the exec params:
+	-maxplayers 64 -maxplayers_override 64
+```
+
 - **SPM \<secret_key\>** - switching the availability of editing
 	- `@secret_key` - required key for SPM activate/deactivate
 - **SPMDisplay \<team\>** - toggles the display of current spawns
