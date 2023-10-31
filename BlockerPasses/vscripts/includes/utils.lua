@@ -56,3 +56,16 @@ end
 function intToIp(int)
 	return bit.rshift(bit.band(int, 0xFF000000), 24) .. "." .. bit.rshift(bit.band(int, 0x00FF0000), 16) .. "." .. bit.rshift(bit.band(int, 0x0000FF00), 8) .. "." .. bit.band(int, 0x000000FF)
 end
+
+function vecToString(vec)
+	local str = vec[1] .. " " .. vec[2] .. " " .. vec[3]
+	return str 
+end
+
+function StringToVec(str)
+	local nums = {}
+	for i in string.gmatch(str, "%S+") do
+		table.insert(nums, tonumber(i))
+	end
+	return Vector(nums[1], nums[2], nums[3])
+end

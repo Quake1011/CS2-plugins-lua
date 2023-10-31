@@ -29,29 +29,22 @@ Convars:RegisterCommand("BPEditor", function(_, secret_key)
 			editor = Convars:GetCommandClient()
 			EditorStatus = true
 			ScriptPrintMessageChatAll("EDITOR \x04ENABLED")
-			for k,v in pairs(Entities:FindAllByName("BPEnt*")) do
-				print(v)
+			for _,v in pairs(Entities:FindAllByName("BPEnt*")) do
 				v:Kill()
 			end
 			
-			for k,v in pairs(EditorEnts) do
-				local vara = v["model"]
-				local varb = v["angles"]
-				local varc = v["origin"]
-				local vard = v["color"]
-				local vare = v["targetname"]
-				
+			for _,v in pairs(EditorEnts) do
 				local ent_handle = SpawnEntityFromTableSynchronous("prop_dynamic_override", {
-					model = vara,
+					model = v["model"],
 					solid = 6,
-					angles = varb,
-					origin = varc,
-					targetname = vare
+					angles = v["angles"],
+					origin = v["origin"],
+					targetname = v["targetname"]
 				})
 				
 				if ent_handle then
-					ent_handle:SetRenderColor(vard[1],vard[2],vard[3])
-					ent_handle:SetRenderAlpha(tonumber(vard[4]))
+					ent_handle:SetRenderColor(v["color"][1],v["color"][2],v["color"][3])
+					ent_handle:SetRenderAlpha(tonumber(v["color"][4]))
 				end
 			end
 			
@@ -59,7 +52,7 @@ Convars:RegisterCommand("BPEditor", function(_, secret_key)
 				Timers:RemoveTimer(updr)
 			end
 
-			updr = Timers:CreateTimer(0.0001, function()
+			updr = Timers:CreateTimer(0.01, function()
 				hPlayer = editor
 				
 				local angl = hPlayer:GetAnglesAsVector()
@@ -67,10 +60,8 @@ Convars:RegisterCommand("BPEditor", function(_, secret_key)
 				
 				GetPointByAnglesOrigin(org, angl)
 				
-				local entmodel = g_ModelCurDefault
-				
 				local spned_entf  = SpawnEntityFromTableSynchronous("prop_dynamic_override", {
-					model = entmodel,
+					model = g_ModelCurDefault,
 					solid = 6,
 					angles = angl,
 					origin = org,
@@ -87,12 +78,12 @@ Convars:RegisterCommand("BPEditor", function(_, secret_key)
 					spned_entf:SetRenderAlpha(RGBA[4])
 				end
 				
-				Timers:CreateTimer(0.0001, function()
-					for k,v in pairs(Entities:FindAllByName("jktghhgHG78hggGH94oop")) do
+				Timers:CreateTimer(0.01, function()
+					for _,v in pairs(Entities:FindAllByName("jktghhgHG78hggGH94oop")) do
 						v:Kill()
 					end
 				end)
-				return 0.0001
+				return 0.01
 			end)
 		else
 			if updr then
@@ -101,7 +92,7 @@ Convars:RegisterCommand("BPEditor", function(_, secret_key)
 		
 			EditorStatus = false
 			
-			for k,v in pairs(Entities:FindAllByName("NewEnt*")) do
+			for _,v in pairs(Entities:FindAllByName("NewEnt*")) do
 				EditorEnts[v] = nil
 				v:Kill()
 			end
@@ -115,15 +106,9 @@ end, nil, 0)
 
 function GetPointByAnglesOrigin(orxxxx, anxxxx)
 	anxxxx[2] = anxxxx[2] - 26.0	
-	local origin = {x = orxxxx[1], y = orxxxx[2], z = orxxxx[3]}
-	local angles = {pitch = anxxxx[1], yaw = anxxxx[2], roll = anxxxx[3]}
-	local directionX = math.cos(math.rad(angles.pitch)) * math.cos(math.rad(angles.yaw))
-	local directionY = math.cos(math.rad(angles.pitch)) * math.sin(math.rad(angles.yaw))
-	local directionZ = math.sin(math.rad(angles.pitch))
-
-	orxxxx[1] = origin.x + 5 * directionX + 80 * math.cos(math.rad(angles.yaw))
-	orxxxx[2] = origin.y + 5 * directionY + 80 * math.sin(math.rad(angles.yaw))
-	orxxxx[3] = origin.z + 5 * directionZ
+	orxxxx[1] = orxxxx[1] + 5 * math.cos(math.rad(anxxxx[1])) * math.cos(math.rad(anxxxx[2])) + 40 * math.cos(math.rad(anxxxx[2]))
+	orxxxx[2] = orxxxx[2] + 5 * math.cos(math.rad(anxxxx[1])) * math.sin(math.rad(anxxxx[2])) + 40 * math.sin(math.rad(anxxxx[2]))
+	orxxxx[3] = orxxxx[3] + 5 * math.sin(math.rad(anxxxx[1]))
 end
 
 Convars:RegisterCommand("BPModel", function(__, modelpath)
@@ -147,15 +132,9 @@ Convars:RegisterCommand("BPColor", function(__,r,g,b,a)
 		g = tonumber(g)
 		b = tonumber(b)
 		a = tonumber(a)
-		if r <= 255 and r >= 0 then 
-			if g <= 255 and g >= 0 then
-				if b <= 255 and b >= 0 then
-					if a <= 255 and a >= 0 then
-						g_DefaultColor = r .. " " .. g .. " " .. b .. " " .. a
-						return
-					end
-				end
-			end
+		if r <= 255 and r >= 0 and g <= 255 and g >= 0 and b <= 255 and b >= 0 and a <= 255 and a >= 0 then 
+			g_DefaultColor = r .. " " .. g .. " " .. b .. " " .. a
+			return
 		end
 		
 		ScriptPrintMessageChatAll(" \x04Invalid color! Color format --> \x020-255 0-255 0-255 0-255\xe2\x80\xa9\x04Example: \x02\"BPColor " .. g_DefaultColor .. "\"")
@@ -255,19 +234,6 @@ Convars:RegisterCommand("BPDel", function(_, name)
 	end
 end, nil, 0)
 
-function vecToString(vec)
-	local str = vec[1] .. " " .. vec[2] .. " " .. vec[3]
-	return str 
-end
-
-function StringToVec(str)
-	local nums = {}
-	for i in string.gmatch(str, "%S+") do
-		table.insert(nums, tonumber(i))
-	end
-	return Vector(nums[1], nums[2], nums[3])
-end
-
 Convars:RegisterCommand("BPGen", function()
 	if EditorStatus == true then
 		local ctr = 1
@@ -277,7 +243,7 @@ Convars:RegisterCommand("BPGen", function()
 		print("	\"PlayerNum\"             	\"10\"	// required number of players for unlock passes")
 		print("	\"Entities\"")
 		print("	{")	
-		for k,v in pairs(EditorEnts) do	
+		for _,v in pairs(EditorEnts) do	
 			print("		\"" .. ctr .. "\"	// any blockname")
 			print("		{")
 			print("			\"model\"             	\"" .. v["model"] .. "\"	// path to model")
@@ -301,28 +267,22 @@ function EvRStart(event)
 			bbCanL = true
 		end
 	else
-		for k,v in pairs(Entities:FindAllByName("BPEnt*")) do
+		for _,v in pairs(Entities:FindAllByName("BPEnt*")) do
 			v:Kill()
 		end
 		
-		for k,v in pairs(EditorEnts) do
-			local vara = v["model"]
-			local varb = v["angles"]
-			local varc = v["origin"]
-			local vard = v["color"]
-			local vare = v["targetname"]
-			
+		for _,v in pairs(EditorEnts) do
 			local ent_handle = SpawnEntityFromTableSynchronous("prop_dynamic_override", {
-				model = vara,
+				model = v["model"],
 				solid = 6,
-				angles = varb,
-				origin = varc,
-				targetname = vare
+				angles = v["angles"],
+				origin = v["origin"],
+				targetname = v["targetname"]
 			})
 			
 			if ent_handle then
-				ent_handle:SetRenderColor(vard[1],vard[2],vard[3])
-				ent_handle:SetRenderAlpha(tonumber(vard[4]))
+				ent_handle:SetRenderColor(v["color"][1],v["color"][2],v["color"][3])
+				ent_handle:SetRenderAlpha(tonumber(v["color"][4]))
 			end
 		end
 	end
@@ -330,18 +290,18 @@ end
 
 function SpawnEntsFromCFG()
 	if TotalEnts then
-		for k,v in pairs(TotalEnts) do
+		for k,_ in pairs(TotalEnts) do
 			TotalEnts[k] = nil
 		end
 		
-		for k,v in pairs(Entities:FindAllByName("BPEnt*")) do
+		for _,v in pairs(Entities:FindAllByName("BPEnt*")) do
 			v:Kill()
 		end
 	end
 
 	if cfg[GetMapName()] ~= nil then
 		if #Entities:FindAllByClassname("player") < cfg[GetMapName()]["PlayerNum"] then
-			for k,v in pairs(cfg[GetMapName()]["Entities"]) do
+			for _,v in pairs(cfg[GetMapName()]["Entities"]) do
 				
 				local vara = v["model"]
 				local varb = v["angles"]
@@ -367,7 +327,8 @@ function SpawnEntsFromCFG()
 					ent_handle:SetRenderAlpha(tonumber(RGBA[4]))
 				end
 				
-				TotalEnts["ent_handle"] = {
+				-- TotalEnts["ent_handle"] = {
+				TotalEnts[ent_handle] = {
 					model = vara,
 					solid = 6,
 					angles = varb,
