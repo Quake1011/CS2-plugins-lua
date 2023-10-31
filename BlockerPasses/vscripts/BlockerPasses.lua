@@ -17,8 +17,8 @@ if bpEvs then
 	end
 end
 
-local g_DefaultColor = "255 255 255 255"
-local g_ModelCurDefault = "models/props/de_dust/dust_metal_door.vmdl"
+local g_DefaultColor = "255 0 0 255"
+local g_ModelCurDefault = "models/props_urban/fence001_128.vmdl"
 
 local updr
 local editor
@@ -273,21 +273,21 @@ Convars:RegisterCommand("BPGen", function()
 		local ctr = 1
 		print("\"".. GetMapName() .. "\"")
 		print("{")
-		for k,v in pairs(EditorEnts) do
-			print("\"Message\"             	\"Some passes will {RED}blocked!\" 	// message which prints on round start event")
-			print("\"PlayerNum\"			\"10\"	// required number of players for unlock passes")
-			print("\"Entities\"")
-			print("{")		
-				print("\"" .. ctr .. "\"	// any blockname")
-				print("{")
-					print("\"model\"\"" .. v["model"] .. "\" // path to model")
-					print("\"color\"\"" .. v["color"][1] .. " " .. v["color"][2] .. " " .. v["color"][3] .. " " .. v["color"][4] .. "\" // color of spawned model")
-					print("\"angles\"\"" .. vecToString(v["angles"]) .. "\" // angel direction of spawned model")
-					print("\"origin\"\"" .. vecToString(v["origin"]) .. "\" // origin coords of spawned model")
-				print("}")
-			print("}")
+		print("	\"Message\"             	\"{RED}[BLOCKER] {WHITE}There are less than {DARKGREEN}10 players{WHITE}. Some passageways will be {RED}blocked\"	// message which prints on round start event")
+		print("	\"PlayerNum\"             	\"10\"	// required number of players for unlock passes")
+		print("	\"Entities\"")
+		print("	{")	
+		for k,v in pairs(EditorEnts) do	
+			print("		\"" .. ctr .. "\"	// any blockname")
+			print("		{")
+			print("			\"model\"             	\"" .. v["model"] .. "\"	// path to model")
+			print("			\"color\"             	\"" .. v["color"][1] .. " " .. v["color"][2] .. " " .. v["color"][3] .. " " .. v["color"][4] .. "\"	// color of spawned model")
+			print("			\"angles\"             	\"" .. vecToString(v["angles"]) .. "\"	// angel direction of spawned model")
+			print("			\"origin\"             	\"" .. vecToString(v["origin"]) .. "\"	// origin coords of spawned model")
+			print("		}")
 			ctr = ctr + 1
 		end
+		print("	}")
 		print("}")
 	end
 end, nil, 0)
