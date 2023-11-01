@@ -65,9 +65,11 @@ function RoundEnd(event)
 		Timers:RemoveTimer(c4t)
 	end
 	
-	if c4t ~= nil then	
-		Timers:RemoveTimer(c4t)
-	end
+	Timers:CreateTimer(Convars:GetInt("mp_round_restart_delay"), function()
+		if c4t ~= nil then	
+			Timers:RemoveTimer(c4t)
+		end
+	end)
 end
 
 function RoundStart(event)
