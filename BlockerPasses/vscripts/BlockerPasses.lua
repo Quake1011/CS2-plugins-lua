@@ -55,15 +55,15 @@ Convars:RegisterCommand("BPEditor", function(_, secret_key)
 			updr = Timers:CreateTimer(0.01, function()
 				hPlayer = editor
 				
-				local angl = hPlayer:GetAnglesAsVector()
-				local org = hPlayer:GetOrigin()
-				
-				GetPointByAnglesOrigin(org, angl)
+				local org = hPlayer:EyePosition()
+				local ang = hPlayer:EyeAngles()
+
+				GetPointByAnglesOrigin(org, ang)
 				
 				local spned_entf  = SpawnEntityFromTableSynchronous("prop_dynamic_override", {
 					model = g_ModelCurDefault,
 					solid = 6,
-					angles = angl,
+					angles = ang,
 					origin = org,
 					targetname = "jktghhgHG78hggGH94oop"
 				})
@@ -83,6 +83,7 @@ Convars:RegisterCommand("BPEditor", function(_, secret_key)
 						v:Kill()
 					end
 				end)
+
 				return 0.01
 			end)
 		else
@@ -99,16 +100,16 @@ Convars:RegisterCommand("BPEditor", function(_, secret_key)
 			
 			SpawnEntsFromCFG()
 			
-			ScriptPrintMessageChatAll("EDITOR \x04DISABLED")
+			ScriptPrintMessageChatAll("EDITOR \x02DISABLED")
 		end 
 	end
 end, nil, 0)
 
-function GetPointByAnglesOrigin(orxxxx, anxxxx)
-	anxxxx[2] = anxxxx[2] - 26.0	
-	orxxxx[1] = orxxxx[1] + 5 * math.cos(math.rad(anxxxx[1])) * math.cos(math.rad(anxxxx[2])) + 40 * math.cos(math.rad(anxxxx[2]))
-	orxxxx[2] = orxxxx[2] + 5 * math.cos(math.rad(anxxxx[1])) * math.sin(math.rad(anxxxx[2])) + 40 * math.sin(math.rad(anxxxx[2]))
-	orxxxx[3] = orxxxx[3] + 5 * math.sin(math.rad(anxxxx[1]))
+function GetPointByAnglesOrigin(org, ang)
+	org[1] = org[1] + 100 * math.cos(math.rad(ang[1])) * math.cos(math.rad(ang[2])) + 45 * math.cos(math.rad(ang[2]))
+	org[2] = org[2] + 100 * math.cos(math.rad(ang[1])) * math.sin(math.rad(ang[2])) + 45 * math.sin(math.rad(ang[2]))
+	org[3] = org[3] + 200 * -math.sin(math.rad(ang[1]))
+	org[3] = org[3] - 40
 end
 
 Convars:RegisterCommand("BPModel", function(__, modelpath)
@@ -132,6 +133,7 @@ Convars:RegisterCommand("BPColor", function(__,r,g,b,a)
 		g = tonumber(g)
 		b = tonumber(b)
 		a = tonumber(a)
+		
 		if r <= 255 and r >= 0 and g <= 255 and g >= 0 and b <= 255 and b >= 0 and a <= 255 and a >= 0 then 
 			g_DefaultColor = r .. " " .. g .. " " .. b .. " " .. a
 			return
@@ -144,10 +146,10 @@ end, nil, 0)
 Convars:RegisterCommand("BPSpawn", function()
 	if EditorStatus == true then
 		hPlayer = Convars:GetCommandClient()
-		local angl = hPlayer:GetAnglesAsVector()
-		local org = hPlayer:GetOrigin()
+		local org = hPlayer:EyePosition()
+		local ang = hPlayer:EyeAngles()
 
-		GetPointByAnglesOrigin(org, angl)
+		GetPointByAnglesOrigin(org, ang)
 
 		local tgName = "NewEnt" .. GetTblSize(EditorEnts)+1
 		
@@ -156,7 +158,7 @@ Convars:RegisterCommand("BPSpawn", function()
 		local spned_entf  = SpawnEntityFromTableSynchronous("prop_dynamic_override", {
 			model = entmodel,
 			solid = 6,
-			angles = angl,
+			angles = ang,
 			origin = org,
 			targetname = tgName
 		})
@@ -175,14 +177,14 @@ Convars:RegisterCommand("BPSpawn", function()
 		org[2] = math.floor(org[2])
 		org[3] = math.floor(org[3])
 		
-		angl[1] = math.floor(angl[1])
-		angl[2] = math.floor(angl[2])
-		angl[3] = math.floor(angl[3])
+		ang[1] = math.floor(ang[1])
+		ang[2] = math.floor(ang[2])
+		ang[3] = math.floor(ang[3])
 		
 		EntData = {
 			model = entmodel,
 			solid = 6,
-			angles = angl,
+			angles = ang,
 			origin = org,
 			targetname = tgName,
 			color = RGBA
@@ -190,7 +192,7 @@ Convars:RegisterCommand("BPSpawn", function()
 		
 		EditorEnts[spned_entf] = EntData
 		
-		ScriptPrintMessageChatAll("name: " .. tgName .. "\xe2\x80\xa9origin: \x02[\x01" .. org[1] .. "\x02]    [\x01" .. org[2] .. "\x02]    [\x01" .. org[3] .. "\x02]\x01" .. "\xe2\x80\xa9angles: \x02[\x01" .. angl[1] .. "\x02]    [\x01" .. angl[2] .. "\x02]    [\x01" .. angl[3] .. "\x02]\x01")
+		ScriptPrintMessageChatAll("name: " .. tgName .. "\xe2\x80\xa9origin: \x02[\x01" .. org[1] .. "\x02]    [\x01" .. org[2] .. "\x02]    [\x01" .. org[3] .. "\x02]\x01" .. "\xe2\x80\xa9angles: \x02[\x01" .. ang[1] .. "\x02]    [\x01" .. ang[2] .. "\x02]    [\x01" .. ang[3] .. "\x02]\x01")
 	end
 end, nil, 0)
 
