@@ -197,9 +197,10 @@ For admin:
 - **grav \<uid\> \<value\>** - set gravity to the player (any decimal positive number, for example 0.5 or 49.0)
 - **fric \<uid\> \<value\>** - to set the grip on the surface of the player (any decimal positive number, for example 0.5 or 49.0)
 - **disarm \<uid\> \<weapon_classname\>** - remove the player's weapon, for example, weapon_ak47. Delete all weapons - instead of <weapon_classname> write - @all
-- **killit \<uid\>** - kill the player
+- **slay \<uid\>** - kill the player
 - **changeteam \<uid\> \<team\>** - change the player's team (team number or short name. For example ct or 3)
 - **hudstatus \<uid\> \<status\>** - turn off or turn off the hood to the player (0 or 1)
+- **slap \<uid\> \<hp\>** - slap player
   
 For all:
 - **login \<password\>** - getting administrator rights for a session

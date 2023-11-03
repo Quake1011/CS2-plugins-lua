@@ -244,7 +244,7 @@ Convars:RegisterCommand("setmap", function(_, map, chtime)
 	end
 end, nil, 0)
 
--- slap <uid>
+-- slap <uid> <hp>
 Convars:RegisterCommand("slap", function(_, userid, hp)
 	if Players[tonumber(userid)]["userid_pawn"]:IsAlive() == true then
 		local client = Convars:GetCommandClient()
@@ -439,8 +439,8 @@ Convars:RegisterCommand("changeteam", function(_, userid, team)
 	end
 end, nil, 0) 
 
--- killit <uid>
-Convars:RegisterCommand("killit", function(_, userid)
+-- slay <uid>
+Convars:RegisterCommand("slay", function(_, userid)
 	if Players[tonumber(userid)]["userid_pawn"]:IsAlive() == true then
 		if IsAdmin(Convars:GetCommandClient()) == true then
 			if Players[tonumber(userid)] ~= nil then
