@@ -251,7 +251,8 @@ Convars:RegisterCommand("slap", function(_, userid, hp)
 		if IsAdmin(client) == true then
 			if userid ~= nil and hp ~= nil and Players[tonumber(userid)] ~= nil then
 				local target = Players[tonumber(userid)]["userid_pawn"]
-				target:TakeDamage(CreateDamageInfo(target, target, Vector(10.0, 10.0, 10.0), target:GetOrigin(), tonumber(hp), 0))
+				target:TakeDamage(CreateDamageInfo(target, target, Vector(0.0, 0.0, 0.0), Vector(0.0, 0.0, 0.0), tonumber(hp), 0))
+				target:ApplyAbsVelocityImpulse(Vector(RandomInt(-100, 100), RandomInt(-100, 100), RandomInt(-100, 100)))
 				PrintToAll("Player {RED}" .. Players[tonumber(userid)]["name"] .. "{WHITE} slapped", "chat")
 				DoEntFireByInstanceHandle(cmd, "command", "play player/damage1.wav", 0.0, Players[tonumber(userid)]["userid_pawn"], Players[tonumber(userid)]["userid_pawn"])
 			end
