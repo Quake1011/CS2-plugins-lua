@@ -5,7 +5,7 @@
 ## Includes 14 lua plugins for CS2
 
 - Blocker Passes
-- Spawn point manager(`dont tested on real players`)
+- Spawn point manager
 - Mini-admin
 - Voting for map
 - Ammo and health refill after kill
