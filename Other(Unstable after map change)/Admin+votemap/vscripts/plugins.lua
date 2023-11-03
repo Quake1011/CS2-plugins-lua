@@ -175,7 +175,7 @@ Convars:RegisterCommand("asay", function(_, ...)
 	end
 	
 	local aName = ""
-	local aColor
+	local aColor = ""
 	if kv["admin_asay_print_name"] == 1 then
 		aName = GetNameByUid(Convars:GetCommandClient()) .. ":"
 		if kv["admin_asay_print_name_color"] ~= "" then
@@ -252,7 +252,7 @@ Convars:RegisterCommand("slap", function(_, userid, hp)
 			if userid ~= nil and hp ~= nil and Players[tonumber(userid)] ~= nil then
 				local target = Players[tonumber(userid)]["userid_pawn"]
 				target:TakeDamage(CreateDamageInfo(target, target, Vector(10.0, 10.0, 10.0), target:GetOrigin(), tonumber(hp), 0))
-				PrintToAll("Player {RED}" .. Players[tonumber(userid)]["name"] .. " slapped", "chat")
+				PrintToAll("Player {RED}" .. Players[tonumber(userid)]["name"] .. "{WHITE} slapped", "chat")
 				DoEntFireByInstanceHandle(cmd, "command", "play player/damage1.wav", 0.0, Players[tonumber(userid)]["userid_pawn"], Players[tonumber(userid)]["userid_pawn"])
 			end
 		end
@@ -277,9 +277,7 @@ Convars:RegisterCommand("kickit", function(_, userid, reason)
 					end
 				else
 					SendToServerConsole("kickid " .. userid .. " kicked by reason: " .. reason)
-					print(1)
 					if kv["admin_kickmessage_enable"] == 1 then
-						print(2)
 						local messvge = kv["admin_kickall_message"]
 						messvge = string.gsub(messvge, "{user}", Players[tonumber(userid)].name)
 						messvge = string.gsub(messvge, "{reason}", reason)
