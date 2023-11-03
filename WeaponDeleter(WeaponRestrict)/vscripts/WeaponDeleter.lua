@@ -122,7 +122,7 @@ function CheckRestrictedForPlayer(weapon, hPlayer)
 				if v:GetTeam() == hPlayer:GetTeam() and v:IsAlive() == true then
 					for _, wpn in pairs(v:GetEquippedWeapons()) do
 						wpn = wpn:GetClassname()
-						if wpn == weapon or ((weapon == "m4a1_silencer" and wpn == "m4a1") or (weapon == "usp_silencer" and wpn == "hkp2000") or (weapon == "mp5sd" and wpn == "mp7")) then
+						if wpn == weapon or ((weapon == "m4a1_silencer" and wpn == "m4a1") or (weapon == "usp_silencer" and wpn == "hkp2000") or (weapon == "mp5sd" and wpn == "mp7") or (weapon == "revolver" and wpn == "deagle") or (weapon == "cz75a" and wpn == "p250")) then
 							exists_weapons = exists_weapons + 1
 						end
 					end			

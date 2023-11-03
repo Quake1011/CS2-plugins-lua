@@ -174,11 +174,27 @@ Convars:RegisterCommand("asay", function(_, ...)
 		end
 	end
 	
+	local aName = ""
+	local aColor
+	if kv["admin_asay_print_name"] == 1 then
+		aName = GetNameByUid(Convars:GetCommandClient()) .. ":"
+		if kv["admin_asay_print_name_color"] ~= "" then
+			aColor = kv["admin_asay_print_name_color"]
+		end
+	end
 	if IsAdmin(Convars:GetCommandClient()) == true then
-		PrintToAll(kv["admin_message_tag"] .. kv["admin_message_color"] .. xxx, "chat")
+		PrintToAll(kv["admin_message_tag"] .. aColor .. aName .. kv["admin_message_color"] .. xxx, "chat")
 	end
 	xxx = ""
 end, nil, 0)
+
+function GetNameByUid(handle)
+	for k,v in pairs(Players) do
+		if v["userid_pawn"] == handle then
+			return v["name"]
+		end
+	end
+end
 
 -- conexec <convar> <newvalue>
 Convars:RegisterCommand("conexec", function(_, varname, value)
@@ -228,30 +244,47 @@ Convars:RegisterCommand("setmap", function(_, map, chtime)
 	end
 end, nil, 0)
 
+-- slap <uid>
+Convars:RegisterCommand("slap", function(_, userid, hp)
+	if Players[tonumber(userid)]["userid_pawn"]:IsAlive() == true then
+		local client = Convars:GetCommandClient()
+		if IsAdmin(client) == true then
+			if userid ~= nil and hp ~= nil and Players[tonumber(userid)] ~= nil then
+				local target = Players[tonumber(userid)]["userid_pawn"]
+				target:TakeDamage(CreateDamageInfo(target, target, Vector(10.0, 10.0, 10.0), target:GetOrigin(), tonumber(hp), 0))
+				PrintToAll("Player {RED}" .. Players[tonumber(userid)]["name"] .. " slapped", "chat")
+				DoEntFireByInstanceHandle(cmd, "command", "play player/damage1.wav", 0.0, Players[tonumber(userid)]["userid_pawn"], Players[tonumber(userid)]["userid_pawn"])
+			end
+		end
+	end
+end, nil, 0)
+
 -- kickit <uid> <reason>
 Convars:RegisterCommand("kickit", function(_, userid, reason)
-	local client = Convars:GetCommandClient()
-	if IsAdmin(client) == true then
-		if userid ~= nil then
-			if reason == nil then
-				reason = ""
-			end
-			if userid == "@all" then
-				for _,v in pairs(Players) do
-					if v["userid_pawn"] ~= client then
-						SendToServerConsole("kickid " .. v["userid"] .. " kicked by reason: " .. reason)
-						ScriptPrintMessageCenterAll("ALL PLAYERS HAS BEEN KICKED")
-					end
+	if Players[tonumber(userid)]["userid_pawn"]:IsAlive() == true then
+		local client = Convars:GetCommandClient()
+		if IsAdmin(client) == true then
+			if userid ~= nil then
+				if reason == nil then
+					reason = ""
 				end
-			else
-				SendToServerConsole("kickid " .. userid .. " kicked by reason: " .. reason)
-				print(1)
-				if kv["admin_kickmessage_enable"] == 1 then
-					print(2)
-					local messvge = kv["admin_kickall_message"]
-					messvge = string.gsub(messvge, "{user}", Players[tonumber(userid)].name)
-					messvge = string.gsub(messvge, "{reason}", reason)
-					PrintToAll(messvge, "chat")
+				if userid == "@all" then
+					for _,v in pairs(Players) do
+						if v["userid_pawn"] ~= client then
+							SendToServerConsole("kickid " .. v["userid"] .. " kicked by reason: " .. reason)
+							ScriptPrintMessageCenterAll("ALL PLAYERS HAS BEEN KICKED")
+						end
+					end
+				else
+					SendToServerConsole("kickid " .. userid .. " kicked by reason: " .. reason)
+					print(1)
+					if kv["admin_kickmessage_enable"] == 1 then
+						print(2)
+						local messvge = kv["admin_kickall_message"]
+						messvge = string.gsub(messvge, "{user}", Players[tonumber(userid)].name)
+						messvge = string.gsub(messvge, "{reason}", reason)
+						PrintToAll(messvge, "chat")
+					end
 				end
 			end
 		end
@@ -260,28 +293,32 @@ end, nil, 0)
 
 -- hp <uid> <value>
 Convars:RegisterCommand("hp", function(_, userid, value)
-	if IsAdmin(Convars:GetCommandClient()) == true then
-		if Players[tonumber(userid)] ~= nil then
-			local target = Players[tonumber(userid)].userid_pawn
-			if target ~= nil and value ~= nil then
-				value = tonumber(value)
-				if value >= 0 then
-					target:SetHealth(value)
-				end
+	if Players[tonumber(userid)]["userid_pawn"]:IsAlive() == true then
+		if IsAdmin(Convars:GetCommandClient()) == true then
+			if Players[tonumber(userid)] ~= nil then
+				local target = Players[tonumber(userid)].userid_pawn
+				if target ~= nil and value ~= nil then
+					value = tonumber(value)
+					if value >= 0 then
+						target:SetHealth(value)
+					end
+				end				
 			end				
-		end				
+		end
 	end
 end, nil, 0)
 
 -- size <uid> <value>
 Convars:RegisterCommand("size", function(_, userid, value)
-	if IsAdmin(Convars:GetCommandClient()) == true then
-		if Players[tonumber(userid)] ~= nil then
-			local target = Players[tonumber(userid)].userid_pawn
-			if target ~= nil and value ~= nil then
-				value = tonumber(value)
-				if value >= 0.0 then
-					target:SetModelScale(value)
+	if Players[tonumber(userid)]["userid_pawn"]:IsAlive() == true then
+		if IsAdmin(Convars:GetCommandClient()) == true then
+			if Players[tonumber(userid)] ~= nil then
+				local target = Players[tonumber(userid)].userid_pawn
+				if target ~= nil and value ~= nil then
+					value = tonumber(value)
+					if value >= 0.0 then
+						target:SetModelScale(value)
+					end
 				end
 			end
 		end
@@ -290,24 +327,26 @@ end, nil, 0)
 
 -- clr <uid> <r> <g> <b> <a>
 Convars:RegisterCommand("clr", function(_, userid, r, g, b, a)
-	if IsAdmin(Convars:GetCommandClient()) == true then
-		if Players[tonumber(userid)] ~= nil then
-			local target = Players[tonumber(userid)].userid_pawn
-			if target ~= nil then
-				r = tonumber(r)
-				g = tonumber(g)
-				b = tonumber(b)
-				a = tonumber(a)
-				if r <= 255 and r >= 0 then 
-					if g <= 255 and g >= 0 then
-						if b <= 255 and b >= 0 then
-							if a <= 255 and a >= 0 then
-								target:SetRenderColor(r,g,b)
-								target:SetRenderAlpha(a)
-								local PlayerWeapons = target:GetEquippedWeapons()
-								for _, wpn in pairs(PlayerWeapons) do
-									wpn:SetRenderColor(r,g,b)
-									wpn:SetRenderAlpha(a)
+	if Players[tonumber(userid)]["userid_pawn"]:IsAlive() == true then
+		if IsAdmin(Convars:GetCommandClient()) == true then
+			if Players[tonumber(userid)] ~= nil then
+				local target = Players[tonumber(userid)].userid_pawn
+				if target ~= nil then
+					r = tonumber(r)
+					g = tonumber(g)
+					b = tonumber(b)
+					a = tonumber(a)
+					if r <= 255 and r >= 0 then 
+						if g <= 255 and g >= 0 then
+							if b <= 255 and b >= 0 then
+								if a <= 255 and a >= 0 then
+									target:SetRenderColor(r,g,b)
+									target:SetRenderAlpha(a)
+									local PlayerWeapons = target:GetEquippedWeapons()
+									for _, wpn in pairs(PlayerWeapons) do
+										wpn:SetRenderColor(r,g,b)
+										wpn:SetRenderAlpha(a)
+									end
 								end
 							end
 						end
@@ -320,13 +359,15 @@ end, nil, 0)
 
 -- grav <uid> <value>
 Convars:RegisterCommand("grav", function(_, userid, value)
-	if IsAdmin(Convars:GetCommandClient()) == true then
-		if Players[tonumber(userid)] ~= nil then
-			local target = Players[tonumber(userid)].userid_pawn
-			if target ~= nil and value ~= nil then
-				value = tonumber(value)
-				if value >= 0.0 then
-					target:SetGravity(value)
+	if Players[tonumber(userid)]["userid_pawn"]:IsAlive() == true then
+		if IsAdmin(Convars:GetCommandClient()) == true then
+			if Players[tonumber(userid)] ~= nil then
+				local target = Players[tonumber(userid)].userid_pawn
+				if target ~= nil and value ~= nil then
+					value = tonumber(value)
+					if value >= 0.0 then
+						target:SetGravity(value)
+					end
 				end
 			end
 		end
@@ -335,13 +376,15 @@ end, nil, 0)
 
 -- fric <uid> <value>
 Convars:RegisterCommand("fric", function(_, userid, value)
-	if IsAdmin(Convars:GetCommandClient()) == true then
-		if Players[tonumber(userid)] ~= nil then
-			local target = Players[tonumber(userid)].userid_pawn
-			if target ~= nil and value ~= nil then
-				value = tonumber(value)
-				if value >= 0.0 then
-					target:SetFriction(value)
+	if Players[tonumber(userid)]["userid_pawn"]:IsAlive() == true then
+		if IsAdmin(Convars:GetCommandClient()) == true then
+			if Players[tonumber(userid)] ~= nil then
+				local target = Players[tonumber(userid)].userid_pawn
+				if target ~= nil and value ~= nil then
+					value = tonumber(value)
+					if value >= 0.0 then
+						target:SetFriction(value)
+					end
 				end
 			end
 		end
@@ -352,18 +395,20 @@ print("\t\t\t\t\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\
 
 -- disarm <uid> <weapon_classname>
 Convars:RegisterCommand("disarm", function(_, userid, weapon)
-	if IsAdmin(Convars:GetCommandClient()) == true then
-		if Players[tonumber(userid)] ~= nil then
-			local target = Players[tonumber(userid)].userid_pawn
-			if target ~= nil and weapon ~= nil then
-				local weapons = target:GetEquippedWeapons()
-				for _, wpn in pairs(weapons) do
-					if weapon == "@all" then
-						wpn:Kill()
-					elseif wpn:GetClassname() == weapon then
-						wpn:Kill()
+	if Players[tonumber(userid)]["userid_pawn"]:IsAlive() == true then
+		if IsAdmin(Convars:GetCommandClient()) == true then
+			if Players[tonumber(userid)] ~= nil then
+				local target = Players[tonumber(userid)].userid_pawn
+				if target ~= nil and weapon ~= nil then
+					local weapons = target:GetEquippedWeapons()
+					for _, wpn in pairs(weapons) do
+						if weapon == "@all" then
+							wpn:Kill()
+						elseif wpn:GetClassname() == weapon then
+							wpn:Kill()
+						end
+						DoEntFireByInstanceHandle(cmd, "command", "lastinv", 0.1, target, target)
 					end
-					DoEntFireByInstanceHandle(cmd, "command", "lastinv", 0.1, target, target)
 				end
 			end
 		end
@@ -372,22 +417,24 @@ end, nil, 0)
 
 -- changeteam <uid> <team>
 Convars:RegisterCommand("changeteam", function(_, userid, team)
-	if IsAdmin(Convars:GetCommandClient()) == true then
-		if Players[tonumber(userid)] ~= nil then
-			local target = Players[tonumber(userid)].userid_pawn
-			if target ~= nil and team ~= nil then	
-				local setsteam 
-				
-				local fHealth = target:GetHealth()
-				
-				if team == "1" or team == "spec" then
-					target:SetTeam(1)
-				elseif team == "2" or team == "t" then
-					target:SetTeam(2)
-				elseif team == "3" or team == "ct" then
-					target:SetTeam(3)
+	if Players[tonumber(userid)]["userid_pawn"]:IsAlive() == true then
+		if IsAdmin(Convars:GetCommandClient()) == true then
+			if Players[tonumber(userid)] ~= nil then
+				local target = Players[tonumber(userid)].userid_pawn
+				if target ~= nil and team ~= nil then	
+					local setsteam 
+					
+					local fHealth = target:GetHealth()
+					
+					if team == "1" or team == "spec" then
+						target:SetTeam(1)
+					elseif team == "2" or team == "t" then
+						target:SetTeam(2)
+					elseif team == "3" or team == "ct" then
+						target:SetTeam(3)
+					end
+					target:SetHealth(fHealth)
 				end
-				target:SetHealth(fHealth)
 			end
 		end
 	end
@@ -395,12 +442,14 @@ end, nil, 0)
 
 -- killit <uid>
 Convars:RegisterCommand("killit", function(_, userid)
-	if IsAdmin(Convars:GetCommandClient()) == true then
-		if Players[tonumber(userid)] ~= nil then
-			local target = Players[tonumber(userid)].userid_pawn
-			if target ~= nil then
-				target:TakeDamage(CreateDamageInfo(target, target, Vector(0.0, 0.0, 0.0), Vector(0.0, 0.0, 0.0), 1337, 4))
-				target:TakeDamage(CreateDamageInfo(target, target, Vector(0.0, 0.0, 0.0), Vector(0.0, 0.0, 0.0), 1337, 4))
+	if Players[tonumber(userid)]["userid_pawn"]:IsAlive() == true then
+		if IsAdmin(Convars:GetCommandClient()) == true then
+			if Players[tonumber(userid)] ~= nil then
+				local target = Players[tonumber(userid)].userid_pawn
+				if target ~= nil then
+					target:TakeDamage(CreateDamageInfo(target, target, Vector(0.0, 0.0, 0.0), Vector(0.0, 0.0, 0.0), 1337, 4))
+					target:TakeDamage(CreateDamageInfo(target, target, Vector(0.0, 0.0, 0.0), Vector(0.0, 0.0, 0.0), 1337, 4))
+				end
 			end
 		end
 	end
@@ -420,8 +469,10 @@ end, nil, 0)
 
 -- suicide
 Convars:RegisterCommand("suicide", function()
-	Convars:GetCommandClient():TakeDamage(CreateDamageInfo(Convars:GetCommandClient(), Convars:GetCommandClient(), Vector(0.0, 0.0, 0.0), Vector(0.0, 0.0, 0.0), 1337, 4))
-	Convars:GetCommandClient():TakeDamage(CreateDamageInfo(Convars:GetCommandClient(), Convars:GetCommandClient(), Vector(0.0, 0.0, 0.0), Vector(0.0, 0.0, 0.0), 1337, 4))
+	if Players[tonumber(userid)]["userid_pawn"]:IsAlive() == true then
+		Convars:GetCommandClient():TakeDamage(CreateDamageInfo(Convars:GetCommandClient(), Convars:GetCommandClient(), Vector(0.0, 0.0, 0.0), Vector(0.0, 0.0, 0.0), 1337, 4))
+		Convars:GetCommandClient():TakeDamage(CreateDamageInfo(Convars:GetCommandClient(), Convars:GetCommandClient(), Vector(0.0, 0.0, 0.0), Vector(0.0, 0.0, 0.0), 1337, 4))
+	end
 end, nil, 0) 
 
 function mapExists(map)
