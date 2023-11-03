@@ -70,11 +70,13 @@ function Pickup(event)
 		local hPlayer = players[event["userid"]]["userid_pawn"]
 		for _,v in pairs(hPlayer:GetEquippedWeapons()) do
 			if wName == v:GetClassname() and CheckRestrictedForPlayer(wName, hPlayer) == true then
-				v:Kill()
-				if cfg["sound_status"] == 1 then
-					DoEntFireByInstanceHandle(cmd, "command", "play " .. cfg["sound_path"], 0.2, hPlayer, hPlayer)
-				end
-				DoEntFireByInstanceHandle(cmd, "command", "lastinv", 0.1, hPlayer, hPlayer)
+				Timers:CreateTimer(0.1, function()
+					v:Kill()
+					if cfg["sound_status"] == 1 then
+						DoEntFireByInstanceHandle(cmd, "command", "play " .. cfg["sound_path"], 0.2, hPlayer, hPlayer)
+					end
+					DoEntFireByInstanceHandle(cmd, "command", "lastinv", 0.1, hPlayer, hPlayer)			
+				end)
 			end
 		end
     end
@@ -120,7 +122,7 @@ function CheckRestrictedForPlayer(weapon, hPlayer)
 				if v:GetTeam() == hPlayer:GetTeam() and v:IsAlive() == true then
 					for _, wpn in pairs(v:GetEquippedWeapons()) do
 						wpn = wpn:GetClassname()
-						if wpn == weapon or ((weapon == "m4a1_silencer" and wpn == "m4a1") or (weapon == "usp_silencer" and wpn == "hkp2000")) then
+						if wpn == weapon or ((weapon == "m4a1_silencer" and wpn == "m4a1") or (weapon == "usp_silencer" and wpn == "hkp2000") or (weapon == "mp5sd" and wpn == "mp7")) then
 							exists_weapons = exists_weapons + 1
 						end
 					end			
