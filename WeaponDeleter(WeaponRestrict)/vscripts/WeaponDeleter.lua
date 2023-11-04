@@ -70,12 +70,13 @@ function Pickup(event)
 		local hPlayer = players[event["userid"]]["userid_pawn"]
 		for _,v in pairs(hPlayer:GetEquippedWeapons()) do
 			if wName == v:GetClassname() and CheckRestrictedForPlayer(wName, hPlayer) == true then
+				DoEntFireByInstanceHandle(cmd, "command", "lastinv", 0.1, hPlayer, hPlayer)
 				Timers:CreateTimer(0.1, function()
-					v:Kill()
+					UTIL_Remove(v)
 					if cfg["sound_status"] == 1 then
 						DoEntFireByInstanceHandle(cmd, "command", "play " .. cfg["sound_path"], 0.2, hPlayer, hPlayer)
 					end
-					DoEntFireByInstanceHandle(cmd, "command", "lastinv", 0.1, hPlayer, hPlayer)			
+					return 0.0
 				end)
 			end
 		end
